@@ -12,7 +12,7 @@ window.title("Move Out")  # Service Name
 
 # Logo image
 logo = Image.open(r"../media/logo.png")
-logo = logo.resize((10, 40)) 
+logo = logo.resize((50, 100)) 
 logo_img = ImageTk.PhotoImage(logo)
 
 window.iconphoto(True, logo_img)
