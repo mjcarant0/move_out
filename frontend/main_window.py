@@ -1,20 +1,28 @@
 import os
-from tkinter import *
 from PIL import Image, ImageTk
+import ttkbootstrap as tb
+from home_page import launch_homepage
 
-# Make the script's folder the current directory
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
+# Set working directory to current file
+os.chdir(os.path.abspath(os.path.dirname(__file__)))
 
-# Create the main window
-window = Tk()
+# Create themed window with fixed phone-like size and soft pink background
+window = tb.Window(themename="vapor")
 window.geometry("390x844")
-window.title("Move Out")  # Service Name
+window.title("Move Out")
+window.configure(bg="#ffe6f0")
 
 # Logo image
-logo = Image.open(r"../media/logo.png")
-logo = logo.resize((50, 100)) 
-logo_img = ImageTk.PhotoImage(logo)
+try:
+    logo = Image.open(os.path.join("media", "logo.png"))
+    logo = logo.resize((50, 100)) 
+    logo_img = ImageTk.PhotoImage(logo)
+    window.iconphoto(True, logo_img)
+except Exception as e:
+    print(f"Error loading logo: {e}")
 
-window.iconphoto(True, logo_img)
+# Launch homepage content
+launch_homepage(window)
 
+# Start the app loop
 window.mainloop()
