@@ -1,28 +1,39 @@
 import os
+from tkinter import *
 from PIL import Image, ImageTk
-import ttkbootstrap as tb
-from home_page import launch_homepage
+from splash_animation import Animation
+from interactive_page import InteractivePage
 
-# Set working directory to current file
-os.chdir(os.path.abspath(os.path.dirname(__file__)))
+class MainWindow(Tk):
+    def __init__(self):
+        super().__init__()
 
-# Create themed window with fixed phone-like size and soft pink background
-window = tb.Window(themename="vapor")
-window.geometry("390x844")
-window.title("Move Out")
-window.configure(bg="#ffe6f0")
+        os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-# Logo image
-try:
-    logo = Image.open(os.path.join("media", "logo.png"))
-    logo = logo.resize((50, 100)) 
-    logo_img = ImageTk.PhotoImage(logo)
-    window.iconphoto(True, logo_img)
-except Exception as e:
-    print(f"Error loading logo: {e}")
+        # Window properties
+        self.title("Move Out")
+        self.geometry("390x844")
+        self.resizable(False, False)
 
-# Launch homepage content
-launch_homepage(window)
+        # Logo image for window icon
+        logo = Image.open(r"../media/logo.png")
+        logo = logo.resize((50, 100))
+        logo_img = ImageTk.PhotoImage(logo)
+        self.iconphoto(True, logo_img)
 
-# Start the app loop
-window.mainloop()
+        # Adding animation with callback to transition
+        self.logo_animation = Animation(self, callback=self.transition_to_interactive_page)
+        self.logo_animation.pack(fill=BOTH, expand=True)
+
+    def transition_to_interactive_page(self):
+        # Destroy the splash screen (removes the logo animation)
+        self.logo_animation.destroy()
+
+        # Create and show the InteractivePage
+        self.interactive_page = InteractivePage(self)
+        self.interactive_page.pack(fill=BOTH, expand=True)
+
+# Run the application
+if __name__ == "__main__":
+    app = MainWindow()
+    app.mainloop()
