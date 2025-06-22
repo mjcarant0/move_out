@@ -16,7 +16,7 @@ class Animation(Frame):
         # Relative path to the GIF
         current_dir = os.path.dirname(__file__)
         media_dir = os.path.join(current_dir, '..', 'media')
-        gif_path = os.path.join(media_dir, 'splash-animation-1.gif')  
+        gif_path = os.path.join(media_dir, 'splash-animation.gif')  
 
         try:
             # Load the GIF
