@@ -1,10 +1,14 @@
 import os
 from tkinter import *
 from PIL import Image, ImageTk
-from splash_animation import Animation
-from interactive_page import InteractivePage
+from .splash_animation import Animation
+from .interactive_page import InteractivePage
 
 class MainWindow(Tk):
+    '''
+        This module defines the MainWindow class for the Move Out application.
+        It initializes the main Tkinter window, displays all the pages
+    '''
     def __init__(self):
         super().__init__()
 
@@ -32,8 +36,3 @@ class MainWindow(Tk):
         # Create and show the InteractivePage
         self.interactive_page = InteractivePage(self)
         self.interactive_page.pack(fill=BOTH, expand=True)
-
-# Run the application
-if __name__ == "__main__":
-    app = MainWindow()
-    app.mainloop()
