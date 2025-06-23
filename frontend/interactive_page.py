@@ -42,7 +42,7 @@ class InteractivePage(Frame):
             cursor="hand2"
         )
         canvas.create_rectangle(0, 0, 156, 26, fill="#f38c9f", outline="#f38c9f", width=1)
-        canvas.create_text(78, 13, text="LOG IN", fill="white", font=("Poppins", 10, "bold"))
+        canvas.create_text(78, 13, text="LOG IN", fill="white", font=("League Spartan", 10, "bold"))
         canvas.bind("<Button-1>", self.login_clicked)
         return canvas
 
@@ -56,6 +56,6 @@ class InteractivePage(Frame):
             cursor="hand2"
         )
         canvas.create_rectangle(0, 0, 156, 26, outline="#f38c9f", width=1.5)
-        canvas.create_text(78, 13, text="SIGN UP", fill="#f38c9f", font=("Poppins", 10, "bold"))
+        canvas.create_text(78, 13, text="SIGN UP", fill="#f38c9f", font=("League Spartan", 10, "bold"))
         canvas.bind("<Button-1>", self.signup_clicked)
         return canvas
