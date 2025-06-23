@@ -1,4 +1,5 @@
 from tkinter import *
+import tkinter.font as tkFont
 
 class InteractivePage(Frame):
     '''
@@ -10,3 +11,7 @@ class InteractivePage(Frame):
 
         self.parent = parent
         self.configure(bg="#ffc4d6")
+
+        title_font = tkFont.Font(family="Poppins", weight="bold", size=24)
+        self.title_label = Label(self, text="MOVE OUT", font=title_font, fg="white", bg="#ffc4d6")
+        self.title_label.place(x=109, y=398)
