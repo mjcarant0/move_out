@@ -10,7 +10,7 @@ class MainWindow(Tk):
 
         os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-        # Window properties
+        # Window properties 
         self.title("Move Out")
         self.geometry("390x844")
         self.resizable(False, False)
