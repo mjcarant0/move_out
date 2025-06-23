@@ -1,8 +1,9 @@
 import os
 from tkinter import *
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk 
 from .splash_animation import Animation
 from .interactive_page import InteractivePage
+from .login_page import LoginPage
 
 class MainWindow(Tk):
     '''
@@ -36,3 +37,11 @@ class MainWindow(Tk):
         # Create and show the InteractivePage
         self.interactive_page = InteractivePage(self)
         self.interactive_page.pack(fill=BOTH, expand=True)
+    
+    def show_login_page(self):
+        # Go to login page
+        self.interactive_page.pack_forget()
+
+        # Create and show the login page
+        self.login_page = LoginPage(self)
+        self.login_page.pack(fill=BOTH, expand=True)
