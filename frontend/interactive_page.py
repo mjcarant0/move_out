@@ -31,7 +31,8 @@ class InteractivePage(Frame):
         self.signup_button.place(x=115, y=735)
 
     def login_clicked(self, event):
-        pass  # Navigation logic later
+        # Show the login page
+        self.parent.show_login_page()
 
     def signup_clicked(self, event):
         pass  # Navigation logic later
