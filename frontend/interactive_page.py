@@ -20,22 +20,23 @@ class InteractivePage(Frame):
             fg="white",
             bg="#ffc4d6"
         )
-        self.title_label.place(x=109, y=398)
+        self.title_label.place(relx=0.5, y=398, anchor="n")  # center X only
 
         # LOG IN Button
         self.login_button = self.create_login_button()
-        self.login_button.place(x=115, y=705)
+        self.login_button.place(relx=0.5, y=705, anchor="n")  # center X only
 
         # SIGN UP Button
         self.signup_button = self.create_signup_button()
-        self.signup_button.place(x=115, y=735)
+        self.signup_button.place(relx=0.5, y=735, anchor="n")  # center X only
 
     def login_clicked(self, event):
         # Show the login page
         self.parent.show_login_page()
 
     def signup_clicked(self, event):
-        pass  # Navigation logic later
+        # Show the signup page (to be implemented)
+        self.parent.show_signup_page()
 
     def create_login_button(self):
         canvas = Canvas(
