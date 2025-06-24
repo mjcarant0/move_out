@@ -1,6 +1,6 @@
-from tkinter import Toplevel, ttk
+from tkinter import *
 
-class SignUpWindow(Toplevel):
+class SignUpPage(Frame):
     def __init__(self, parent):
         super().__init__(parent)
     
