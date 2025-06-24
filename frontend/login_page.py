@@ -79,7 +79,13 @@ class LoginPage(Frame):
         canvas = Canvas(parent, width=156, height=26, bg="#ffc4d6", highlightthickness=0, cursor="hand2")
         canvas.create_rectangle(0, 0, 156, 26, fill="#f38c9f", outline="#f38c9f", width=1)
         canvas.create_text(78, 13, text="LOG IN", fill="white", font=("League Spartan", 10, "bold"))
+        
+        canvas.bind("<Button-1>", self.on_login_clicked)
         return canvas
+
+    def on_login_clicked(self, event):
+        if hasattr(self.parent, "show_home_page"):
+            self.parent.show_home_page()
 
     def create_signup_button(self, parent):
         canvas = Canvas(parent, width=156, height=26, bg="#ffc4d6", highlightthickness=0, cursor="hand2")
