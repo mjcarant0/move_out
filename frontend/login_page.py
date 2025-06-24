@@ -86,15 +86,3 @@ class LoginPage(Frame):
         canvas.create_rectangle(0, 0, 156, 26, fill="white", outline="#f38c9f", width=1)
         canvas.create_text(78, 13, text="SIGN UP", fill="#f38c9f", font=("League Spartan", 10, "bold"))
         return canvas
-    
-# Main window
-root = Tk()
-root.title("Move Out App")
-root.geometry("390x844")
-root.configure(bg="#ffc4d6")
-root.resizable(False, False)
-
-login_page = LoginPage(root)
-login_page.pack(fill=BOTH, expand=True)
-
-root.mainloop()
