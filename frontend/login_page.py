@@ -29,7 +29,7 @@ class LoginPage(Frame):
 
 
         # MOVE OUT Title
-        Label(self, text="MOVE OUT", font=self.title_font, bg="#ffc4d6", fg="white").pack(pady=(150, 40))
+        Label(self, text="MOVE OUT", font=self.title_font, bg="#ffc4d6", fg="white").pack(pady=(100, 0))
 
         # White box container
         white_box = Frame(self, bg="white", width=300, height=420)
