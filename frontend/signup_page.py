@@ -107,9 +107,10 @@ class SignUpPage(Frame):
         canvas.bind("<Button-1>", self.on_signup_clicked)
         return canvas
 
-    def on_signup_clicked(self, event):  # When login button is clicked, navigate to the home page
-        if hasattr(self.parent, "show_home_page"):
-            self.parent.show_home_page()
+    def on_signup_clicked(self, event): # When Signup button is clicked, navigate to the Login page
+        if hasattr(self.parent, "show_login_page"):
+            self.parent.show_login_page()
+
 
     def create_login_button(self, parent):
         canvas = Canvas(parent, width=156, height=26, bg="#ffc4d6", highlightthickness=0, cursor="hand2")
