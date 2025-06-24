@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter.font import Font
+from tkinter import ttk
 
 class LoginPage(Frame):
     def __init__(self, parent):
@@ -13,13 +14,19 @@ class LoginPage(Frame):
 
         # Country code list
         self.country_list = [
-            ("🇵🇭", "+63", "Philippines"),
-            ("🇺🇸", "+1", "United States"),
-            ("🇬🇧", "+44", "United Kingdom"),
-            ("🇮🇳", "+91", "India"),
-            ("🇨🇦", "+1", "Canada"),
-            ("🇦🇺", "+61", "Australia"),
-        ]
+       ("🇧🇳", "+673", "Brunei"),
+       ("🇰🇭", "+855", "Cambodia"),
+       ("🇮🇩", "+62", "Indonesia"),
+       ("🇱🇦", "+856", "Laos"),
+       ("🇲🇾", "+60", "Malaysia"),
+       ("🇲🇲", "+95", "Myanmar"),
+       ("🇵🇭", "+63", "Philippines"),
+       ("🇸🇬", "+65", "Singapore"),
+       ("🇹🇭", "+66", "Thailand"),
+       ("🇹🇱", "+670", "Timor-Leste"),
+       ("🇻🇳", "+84", "Vietnam")
+       ]
+
 
         # MOVE OUT Title
         Label(self, text="MOVE OUT", font=self.title_font, bg="#ffc4d6", fg="white").pack(pady=(150, 40))
@@ -37,11 +44,18 @@ class LoginPage(Frame):
         phone_frame = Frame(white_box, bg="white")
         phone_frame.pack(pady=(30, 10), padx=15, fill=X)
 
-        # Country selector
-        self.selected_country = StringVar(value="🇵🇭 +63")
-        self.country_btn = Button(phone_frame, textvariable=self.selected_country, font=self.phone_font,
-                                  relief=SOLID, bd=1, bg="white", command=self.show_country_picker, padx=6)
-        self.country_btn.pack(side=LEFT)
+          # Country selector using Combobox
+        self.selected_country = StringVar()
+        self.country_combo = ttk.Combobox(
+        phone_frame,
+        textvariable=self.selected_country,
+        font=self.phone_font,
+        state="readonly",
+        width=6,
+        values=[f"{flag} {code}" for flag, code, _ in self.country_list]
+          )
+        self.selected_country.set("🇵🇭 +63")  # Default value
+        self.country_combo.pack(side=LEFT)
 
         # Phone Entry
         Entry(phone_frame, font=self.phone_font, bd=1, relief=SOLID, width=18).pack(
@@ -73,27 +87,6 @@ class LoginPage(Frame):
         canvas.create_text(78, 13, text="SIGN UP", fill="#f38c9f", font=("League Spartan", 10, "bold"))
         return canvas
     
-    def show_country_picker(self):
-        popup = Toplevel(self)
-        popup.title("Select Country Code")
-        popup.geometry("250x200")
-        popup.grab_set()
-
-        listbox = Listbox(popup, font=self.phone_font)
-        listbox.pack(fill=BOTH, expand=True)
-
-        for flag, code, name in self.country_list:
-            listbox.insert(END, f"{flag} {code} - {name}")
-
-        def on_select(event):
-            index = listbox.curselection()
-            if index:
-                flag, code, name = self.country_list[index[0]]
-                self.selected_country.set(f"{flag} {code}")
-                popup.destroy()
-
-        listbox.bind("<<ListboxSelect>>", on_select)
-
 # Main window
 root = Tk()
 root.title("Move Out App")
