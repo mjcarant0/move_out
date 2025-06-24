@@ -11,6 +11,16 @@ class LoginPage(Frame):
         self.login_font = Font(family="Poppins", size=45, weight="bold")
         self.phone_font = Font(family="Montserrat", size=9)
 
+        # Country code list
+        self.country_list = [
+            ("🇵🇭", "+63", "Philippines"),
+            ("🇺🇸", "+1", "United States"),
+            ("🇬🇧", "+44", "United Kingdom"),
+            ("🇮🇳", "+91", "India"),
+            ("🇨🇦", "+1", "Canada"),
+            ("🇦🇺", "+61", "Australia"),
+        ]
+
         # MOVE OUT Title
         Label(self, text="MOVE OUT", font=self.title_font, bg="#ffc4d6", fg="white").pack(pady=(150, 40))
 
@@ -27,7 +37,13 @@ class LoginPage(Frame):
         phone_frame = Frame(white_box, bg="white")
         phone_frame.pack(pady=(30, 10), padx=15, fill=X)
 
-        Label(phone_frame, text="🇵🇭 +63", bg="white", font=self.phone_font).pack(side=LEFT)
+        # Country selector
+        self.selected_country = StringVar(value="🇵🇭 +63")
+        self.country_btn = Button(phone_frame, textvariable=self.selected_country, font=self.phone_font,
+                                  relief=SOLID, bd=1, bg="white", command=self.show_country_picker, padx=6)
+        self.country_btn.pack(side=LEFT)
+
+        # Phone Entry
         Entry(phone_frame, font=self.phone_font, bd=1, relief=SOLID, width=18).pack(
             side=LEFT, fill=X, expand=True, padx=(8, 0), ipady=4
         )
@@ -54,8 +70,29 @@ class LoginPage(Frame):
     def create_signup_button(self, parent):
         canvas = Canvas(parent, width=156, height=26, bg="#ffc4d6", highlightthickness=0, cursor="hand2")
         canvas.create_rectangle(0, 0, 156, 26, fill="white", outline="#f38c9f", width=1)
-        canvas.create_text(78, 13, text="SIGN UP", fill="#f38c9f", font=("League Spartan", 10, "bold"))  # Changed text color
+        canvas.create_text(78, 13, text="SIGN UP", fill="#f38c9f", font=("League Spartan", 10, "bold"))
         return canvas
+    
+    def show_country_picker(self):
+        popup = Toplevel(self)
+        popup.title("Select Country Code")
+        popup.geometry("250x200")
+        popup.grab_set()
+
+        listbox = Listbox(popup, font=self.phone_font)
+        listbox.pack(fill=BOTH, expand=True)
+
+        for flag, code, name in self.country_list:
+            listbox.insert(END, f"{flag} {code} - {name}")
+
+        def on_select(event):
+            index = listbox.curselection()
+            if index:
+                flag, code, name = self.country_list[index[0]]
+                self.selected_country.set(f"{flag} {code}")
+                popup.destroy()
+
+        listbox.bind("<<ListboxSelect>>", on_select)
 
 # Main window
 root = Tk()
