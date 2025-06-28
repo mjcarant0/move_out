@@ -35,7 +35,7 @@ class InteractivePage(Frame):
         self.parent.show_login_page()
 
     def signup_clicked(self, event):
-        # Show the signup page (to be implemented)
+        # Show the signup page
         self.parent.show_signup_page()
 
     def create_login_button(self):
