@@ -7,6 +7,7 @@ from .interactive_page import InteractivePage
 from .login_page import LoginPage
 from .signup_page import SignUpPage
 from .home_page import HomePage
+from .booking_page import BookingPage
 
 class MainWindow(Tk):
     '''
@@ -69,3 +70,11 @@ class MainWindow(Tk):
         # Create and show the home page
         self.home_page = HomePage(self)
         self.home_page.pack(fill=BOTH, expand=True)
+
+    def show_booking_page(self):
+        # Hide current page
+        self.clear_current_page()
+
+        # Create and show the booking page
+        self.booking_page = BookingPage(self)
+        self.booking_page.pack(fill=BOTH, expand=True)
