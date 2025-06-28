@@ -28,7 +28,7 @@ class HomePage(Frame):
         Label(pink_div, text="SECURELY BOOK YOUR\nRIDE", font=self.title_font, bg="#ffc4d6", fg="white", justify="left").pack(anchor="w", pady=(60, 20), padx=25)
  
         # Light Pink Container
-        lpink_box = Frame(self, bg="#ffe5ec", width=300, height=430)
+        lpink_box = Frame(self, bg="#ffe5ec", width=300, height=280)
         lpink_box.place(x=45, y=157)
         lpink_box.pack_propagate(False)
 
@@ -64,35 +64,6 @@ class HomePage(Frame):
         self.dropoff_entry.place(x=5, y=30, width=240, height=25)
         self.dropoff_entry.bind("<FocusIn>", lambda e: self._clear_placeholder(self.dropoff_entry, "Search Drop-off Location"))
         self.dropoff_entry.bind("<FocusOut>", lambda e: self._add_placeholder(self.dropoff_entry, "Search Drop-off Location"))
-
-        # Vehicle container
-        vehicle_box = Frame(lpink_box, bg="white", width=250, height=65)
-        vehicle_box.pack(pady=(20, 0))
-        vehicle_box.pack_propagate(False)
-
-        Label(vehicle_box, text="Vehicle", font=self.label_font, fg="black", bg="white").place(x=5, y=5)
-
-        self.vehicle_var = StringVar()
-        self.vehicle_combo = ttk.Combobox(vehicle_box, textvariable=self.vehicle_var, state="readonly", font=self.dropdown_font,
-                                          values=["Select a Vehicle", "Motor", "Car (4-Seater)", "Van (6-Seater)"], style="Pink.TCombobox")
-        self.vehicle_combo.current(0)
-        self.vehicle_combo.pack(fill="x", pady=(0, 24), ipady=8)
-
-        # Line
-        line = Frame(lpink_box, bg="#ffc4d6", width=250, height=2)
-        line.pack(pady=(30, 0))
-        line.pack_propagate(False)
-
-        # Price container
-        price_container = Frame(lpink_box, bg="#ffe5ec", width=250, height=25)
-        price_container.pack(pady=(10, 0))
-
-        # Price Label
-        Label(price_container, text="Price", font=self.price_label_font, fg="black", bg="#ffe5ec").place(x=5)
-
-        # Price Value
-        self.price_value = Label(price_container, text="₱ 000.00", font=self.price_font, fg="black", bg="#ffe5ec")
-        self.price_value.place(x=175)
 
         self.create_proceed_button(lpink_box).pack(pady=(20, 0))
 
