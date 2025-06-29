@@ -32,11 +32,6 @@ class HomePage(Frame):
         lpink_box.place(x=45, y=157)
         lpink_box.pack_propagate(False)
 
-        # Navigation Bar
-        nav_bar = Frame(self, bg="#ffc4d6", width=390, height=65)
-        nav_bar.place(y=719)
-        nav_bar.pack_propagate(False)
-
         # Pickup container
         pickup_box = Frame(lpink_box, bg="white", width=250, height=65)
         pickup_box.pack(pady=(40, 0))
@@ -67,6 +62,17 @@ class HomePage(Frame):
 
         self.create_proceed_button(lpink_box).pack(pady=(20, 0))
 
+        # Bottom Nav Bar
+        nav_bar = Frame(self, bg="#ffc4d6", width=390, height=65)
+        nav_bar.place(x=0, y=779)
+
+        Button(nav_bar, text="🏠", font=("Arial", 20), bg="#ffc4d6", bd=0,
+               activebackground="#ffc4d6", cursor="hand2", command=self.go_home).place(x=40, y=5)
+        Button(nav_bar, text="📄", font=("Arial", 20), bg="#ffc4d6", bd=0,
+               activebackground="#ffc4d6", cursor="hand2", command=self.go_documents).place(x=175, y=5)
+        Button(nav_bar, text="👤", font=("Arial", 20), bg="#ffc4d6", bd=0,
+               activebackground="#ffc4d6", cursor="hand2", command=self.go_profile).place(x=320, y=5)
+
     def create_proceed_button(self, lpink_box):
         canvas = Canvas(lpink_box, width=250, height=26, bg="#ffc4d6", highlightthickness=0, cursor="hand2")
         canvas.create_rectangle(0, 0, 250, 26, fill="#f38c9f", outline="#f38c9f", width=2)
@@ -74,12 +80,23 @@ class HomePage(Frame):
         
         return canvas
     
-    def _clear_placeholder(self, entry, placeholder):
-        if entry.get() == placeholder:
-            entry.delete(0, END)
-            entry.config(fg="black")
+    def clear_placeholder(self, entry_widget, placeholder_text):
+        if entry_widget.get() == placeholder_text:
+            entry_widget.delete(0, END)
+            entry_widget.config(fg="black")
 
-    def _add_placeholder(self, entry, placeholder):
-        if not entry.get():
-            entry.insert(0, placeholder)
-            entry.config(fg="gray")
+    def restore_placeholder(self, entry_widget, placeholder_text):
+        if not entry_widget.get():
+            entry_widget.insert(0, placeholder_text)
+            entry_widget.config(fg="gray")
+
+    def go_home(self):
+        if hasattr(self.parent, "show_home_page"):
+            self.parent.show_home_page()
+
+    def go_documents(self):
+        print("Go documents")
+
+    def go_profile(self):
+        if hasattr(self.parent, "show_account_page"):
+            self.parent.show_account_page()

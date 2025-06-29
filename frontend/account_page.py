@@ -1,9 +1,10 @@
 from tkinter import *
 import tkinter.font as Font
 
-class AccountEditPage(Frame):
+class AccountPage(Frame):
     def __init__(self, parent):
         super().__init__(parent)
+        self.parent = parent
         self.configure(bg="white")
 
         # Fonts
@@ -107,15 +108,5 @@ class AccountEditPage(Frame):
         print("Go documents")
 
     def go_profile(self):
-        print("Go profile")
-
-
-# Run the UI
-if __name__ == "__main__":
-    root = Tk()
-    root.geometry("390x844")
-    root.resizable(False, False)
-    root.title("Account")
-    app = AccountEditPage(root)
-    app.place(x=0, y=0, width=390, height=844)
-    root.mainloop()
+        if hasattr(self.parent, "show_account_page"):
+            self.parent.show_account_page()

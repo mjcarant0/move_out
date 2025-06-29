@@ -2,6 +2,7 @@ import os
 from tkinter import *
 from PIL import Image, ImageTk
 
+from .account_page import AccountPage
 from .splash_animation import Animation
 from .interactive_page import InteractivePage
 from .login_page import LoginPage
@@ -70,6 +71,14 @@ class MainWindow(Tk):
         # Create and show the home page
         self.home_page = HomePage(self)
         self.home_page.pack(fill=BOTH, expand=True)
+
+    def show_account_page(self):
+        # Hide current page
+        self.clear_current_page()
+
+        # Create and show the account page
+        self.account_page = AccountPage(self)
+        self.account_page.pack(fill=BOTH, expand=True)
 
     def show_booking_page(self):
         # Hide current page
