@@ -48,6 +48,14 @@ class MainWindow(Tk):
         self.interactive_page = InteractivePage(self)
         self.interactive_page.pack(fill=BOTH, expand=True)
 
+    def show_interactive_page(self):
+        # Hide current page
+        self.clear_current_page()
+
+        # Show interactive page
+        self.interactive_page = InteractivePage(self)
+        self.interactive_page.pack(fill=BOTH, expand=True)
+
     def show_login_page(self):
         # Hide current page
         self.clear_current_page()

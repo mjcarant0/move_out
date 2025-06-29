@@ -61,9 +61,8 @@ class AccountPage(Frame):
         self.save_label.place_forget()
 
         # Log out Button
-        Button(self, text="Log Out", font=self.button_font, bg="#f38c9f", fg="white",
-               activebackground="#ffc4d6", bd=0, cursor="hand2")\
-            .place(x=70, y=620, width=250, height=35)
+        Button(self, text="LOG OUT", font=self.button_font, bg="#f38c9f", fg="white",
+               activebackground="#ffc4d6", bd=0, cursor="hand2", command=self.go_interactive).place(x=70, y=620, width=250, height=25)
 
         # Bottom Nav Bar
         nav_bar = Frame(self, bg="#ffc4d6", width=390, height=65)
@@ -99,6 +98,10 @@ class AccountPage(Frame):
         if not entry_widget.get():
             entry_widget.insert(0, placeholder_text)
             entry_widget.config(fg="gray")
+
+    def go_interactive(self):
+        if hasattr(self.parent, "show_interactive_page"):
+            self.parent.show_interactive_page()
 
     def go_home(self):
         if hasattr(self.parent, "show_home_page"):
