@@ -24,43 +24,47 @@ class AccountEditPage(Frame):
         canvas.create_oval(0, 0, 200, 200, fill="white", outline="white")
         canvas.create_text(100, 100, text="👤", font=("Arial", 70), fill="#ffc4d6")
 
-        # First Name
-        self.first_name_entry = Entry(self, font=self.input_font, bd=1, relief=SOLID, fg="gray", state=DISABLED)
+        # First Name Entry
+        self.first_name_entry = Entry(self, font=self.input_font, bd=1, relief=SOLID, fg="gray", width=35, state=DISABLED)
         self.first_name_entry.insert(0, "First Name")
-        self.first_name_entry.place(x=70, y=400, width=250, height=35)
-        Label(self, text="First Name", font=self.input_font, fg="#bdbdbd", bg="white").place(x=80, y=408)
+        self.first_name_entry.place(x=70, y=420, width=250, height=35)
+        self.first_name_entry.bind("<FocusIn>", lambda e: self.clear_placeholder(self.first_name_entry, "First Name"))
+        self.first_name_entry.bind("<FocusOut>", lambda e: self.restore_placeholder(self.first_name_entry, "First Name"))
 
-        # Last Name
-        self.last_name_entry = Entry(self, font=self.input_font, bd=1, relief=SOLID, fg="gray", state=DISABLED)
+        # Last Name Entry
+        self.last_name_entry = Entry(self, font=self.input_font, bd=1, relief=SOLID, fg="gray", width=35, state=DISABLED)
         self.last_name_entry.insert(0, "Last Name")
-        self.last_name_entry.place(x=70, y=455, width=250, height=35)
-        Label(self, text="Last Name", font=self.input_font, fg="#bdbdbd", bg="white").place(x=80, y=463)
+        self.last_name_entry.place(x=70, y=480, width=250, height=35)
+        self.last_name_entry.bind("<FocusIn>", lambda e: self.clear_placeholder(self.last_name_entry, "Last Name"))
+        self.last_name_entry.bind("<FocusOut>", lambda e: self.restore_placeholder(self.last_name_entry, "Last Name"))
 
-        # Phone
-        self.phone_frame = Frame(self, bg="white", bd=1, relief="solid")
-        self.phone_frame.place(x=70, y=510, width=250, height=35)
+        # Phone Number
+        self.phone_frame = Frame(self, bg="white", bd=1, relief=SOLID)
+        self.phone_frame.place(x=70, y=540, width=250, height=35)
 
         Label(self.phone_frame, text="🇵🇭 +63", font=self.input_font, bg="white").pack(side=LEFT, padx=5)
-        self.phone_entry = Entry(self.phone_frame, font=self.input_font, fg="#bdbdbd", bg="white", bd=0, state=DISABLED)
+        self.phone_entry = Entry(self.phone_frame, font=self.input_font, fg="gray", bg="white", bd=0, state=DISABLED)
         self.phone_entry.insert(0, "Phone Number")
         self.phone_entry.pack(side=LEFT, fill=X, expand=True)
+        self.phone_entry.bind("<FocusIn>", lambda e: self.clear_placeholder(self.phone_entry, "Phone Number"))
+        self.phone_entry.bind("<FocusOut>", lambda e: self.restore_placeholder(self.phone_entry, "Phone Number"))
 
-        # Edit & Save Labels
+        # Edit & Save Buttons (Toggle Visibility)
         self.edit_label = Label(self, text="✎ Edit", font=("Arial", 8), bg="white", fg="black", cursor="hand2")
-        self.edit_label.place(x=310, y=550)
+        self.edit_label.place(x=310, y=590)
         self.edit_label.bind("<Button-1>", self.enable_editing)
 
         self.save_label = Label(self, text="💾 Save", font=("Arial", 8), bg="white", fg="black", cursor="hand2")
-        self.save_label.place(x=310, y=550)
+        self.save_label.place(x=310, y=590)
         self.save_label.bind("<Button-1>", self.save_info)
         self.save_label.place_forget()
 
         # Log out Button
         Button(self, text="Log Out", font=self.button_font, bg="#f38c9f", fg="white",
                activebackground="#ffc4d6", bd=0, cursor="hand2")\
-            .place(x=70, y=590, width=250, height=35)
+            .place(x=70, y=620, width=250, height=35)
 
-        # Nav Bar
+        # Bottom Nav Bar
         nav_bar = Frame(self, bg="#ffc4d6", width=390, height=65)
         nav_bar.place(x=0, y=779)
 
@@ -76,18 +80,28 @@ class AccountEditPage(Frame):
         self.last_name_entry.config(state=NORMAL)
         self.phone_entry.config(state=NORMAL)
         self.edit_label.place_forget()
-        self.save_label.place(x=310, y=550)
+        self.save_label.place(x=310, y=590)
 
     def save_info(self, event=None):
         self.first_name_entry.config(state=DISABLED)
         self.last_name_entry.config(state=DISABLED)
         self.phone_entry.config(state=DISABLED)
         self.save_label.place_forget()
-        self.edit_label.place(x=310, y=550)
-        # You can add save logic here (e.g., write to file/db)
+        self.edit_label.place(x=310, y=590)
+
+    def clear_placeholder(self, entry_widget, placeholder_text):
+        if entry_widget.get() == placeholder_text:
+            entry_widget.delete(0, END)
+            entry_widget.config(fg="black")
+
+    def restore_placeholder(self, entry_widget, placeholder_text):
+        if not entry_widget.get():
+            entry_widget.insert(0, placeholder_text)
+            entry_widget.config(fg="gray")
 
     def go_home(self):
-        print("Go home")
+        if hasattr(self.parent, "show_home_page"):
+            self.parent.show_home_page()
 
     def go_documents(self):
         print("Go documents")
@@ -95,7 +109,8 @@ class AccountEditPage(Frame):
     def go_profile(self):
         print("Go profile")
 
-# Run as standalone
+
+# Run the UI
 if __name__ == "__main__":
     root = Tk()
     root.geometry("390x844")
