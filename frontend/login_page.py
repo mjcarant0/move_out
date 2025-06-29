@@ -11,6 +11,7 @@ class LoginPage(Frame):
         self.welcome_font = Font(family="League spartan", size=10, weight="bold")
         self.login_font = Font(family="Poppins", size=45, weight="bold")
         self.phone_font = Font(family="Montserrat", size=9)
+        self.button_font = Font(family="League Spartan", size=10, weight="bold")
 
         # Country code list
         self.country_list = [
@@ -65,17 +66,19 @@ class LoginPage(Frame):
         self.phone_entry.bind("<FocusOut>", lambda e: self.restore_placeholder(self.phone_entry, "Mobile Phone"))
 
         # Login button
-        self.create_login_button(white_box).pack(pady=(10, 20))
+        Button(white_box, text="LOGIN", font=self.button_font, bg="#f38c9f", fg="white",
+            activebackground="#ffc4d6", bd=0, cursor="hand2", command=self.on_login_clicked).place(x=70, y=240, width=160, height=25)
 
         # Line separator
         line = Frame(white_box, bg="#ffc4d6", height=1, width=270)
-        line.pack(pady=(10, 10))
+        line.pack(pady=(70, 10))
 
         # Don't have an account
-        Label(white_box, text="Don't have an account yet?", font=self.welcome_font, fg="#ff99b8", bg="white").pack(pady=(10, 0))
+        Label(white_box, text="Don't have an account yet?", font=self.welcome_font, fg="#ff99b8", bg="white").pack(pady=(0, 0))
 
         # Sign up button
-        self.create_signup_button(white_box).pack(pady=(10, 20))
+        Button(white_box, text="SIGN UP", font=self.button_font, bg="#f38c9f", fg="white",
+            activebackground="#ffc4d6", bd=0, cursor="hand2", command=self.on_signup_clicked).place(x=70, y=360, width=160, height=25)
 
     def clear_placeholder(self, entry_widget, placeholder_text):
         if entry_widget.get() == placeholder_text:
@@ -87,25 +90,10 @@ class LoginPage(Frame):
             entry_widget.insert(0, placeholder_text)
             entry_widget.config(fg="gray")
 
-    def create_login_button(self, parent):
-        canvas = Canvas(parent, width=156, height=26, bg="#ffc4d6", highlightthickness=0, cursor="hand2")
-        canvas.create_rectangle(0, 0, 156, 26, fill="#f38c9f", outline="#f38c9f", width=2)
-        canvas.create_text(78, 13, text="LOG IN", fill="white", font=("League Spartan", 10, "bold"))
-        
-        canvas.bind("<Button-1>", self.on_login_clicked)
-        return canvas
-
-    def on_login_clicked(self, event): # When login button is clicked, navigate to the home page
+    def on_login_clicked(self): # When login button is clicked, navigate to the home page
         if hasattr(self.parent, "show_home_page"):
             self.parent.show_home_page()
 
-    def create_signup_button(self, parent):
-        canvas = Canvas(parent, width=156, height=26, bg="#ffc4d6", highlightthickness=0, cursor="hand2")
-        canvas.create_rectangle(0, 0, 156, 26, fill="white", outline="#f38c9f", width=2)
-        canvas.create_text(78, 13, text="SIGN UP", fill="#f38c9f", font=("League Spartan", 10, "bold"))
-        canvas.bind("<Button-1>", self.on_signup_clicked)
-        return canvas
-
-    def on_signup_clicked(self, event): # When Signup button is clicked, navigate to the signup page
+    def on_signup_clicked(self): # When Signup button is clicked, navigate to the signup page
         if hasattr(self.parent, "show_signup_page"):
             self.parent.show_signup_page()
