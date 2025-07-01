@@ -30,6 +30,23 @@ def vehicle_table(connection):
     cost_per_mile REAL
     )
     """
+    cursor = connection.cursor()
+    cursor.execute(query)
+    connection.commit()
+
+def user_log_table(connection):
+    query = """
+    CREATE TABLE IF NOT EXISTS users ( 
+        user_id TEXT PRIMARY KEY,
+        phone_number TEXT UNIQUE,
+        last_name TEXT,
+        first_name TEXT,
+        email TEXT UNIQUE,
+    )
+    """
+    cursor = connection.cursor()
+    cursor.execute(query)
+    connection.commit()
 
 # Main function wrapper 
 def main():
