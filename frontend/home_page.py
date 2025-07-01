@@ -1,6 +1,5 @@
 from tkinter import *
 import tkinter.font as Font
-from tkinter import ttk
 
 class HomePage(Frame):
     '''
@@ -12,13 +11,13 @@ class HomePage(Frame):
         self.parent = parent
         self.configure(bg="white")
 
+        self.suggestions_box = None
+        self.active_entry = None
+
         self.title_font = Font.Font(family="Poppins", size=28, weight="bold")
         self.label_font = Font.Font(family="Montserrat", size=12, weight="bold")
         self.proceed_font = Font.Font(family="League Spartan", size=10, weight="bold")
         self.placeholder_font = Font.Font(family="Montserrat", size=9)
-        self.price_label_font = Font.Font(family="Montserrat", size=15, weight="bold")
-        self.price_font = Font.Font(family="Montserrat", size=15)
-        self.dropdown_font = Font.Font(family="Poppins", size=20, weight="bold")
 
         # Pink Divider
         pink_div = Frame(self, bg="#ffc4d6", width=390, height=315)
@@ -31,6 +30,18 @@ class HomePage(Frame):
         lpink_box = Frame(self, bg="#ffe5ec", width=300, height=280)
         lpink_box.place(x=45, y=157)
         lpink_box.pack_propagate(False)
+
+        # Navigation Bar
+        nav_bar = Frame(self, bg="#ffc4d6", width=390, height=65)
+        nav_bar.place(y=719)
+        nav_bar.pack_propagate(False)
+
+        Button(nav_bar, text="🏠", font=("Arial", 20), bg="#ffc4d6", bd=0,
+               activebackground="#ffc4d6", cursor="hand2", command=self.go_home).place(x=40, y=5)
+        Button(nav_bar, text="📄", font=("Arial", 20), bg="#ffc4d6", bd=0,
+               activebackground="#ffc4d6", cursor="hand2", command=self.go_documents).place(x=175, y=5)
+        Button(nav_bar, text="👤", font=("Arial", 20), bg="#ffc4d6", bd=0,
+               activebackground="#ffc4d6", cursor="hand2", command=self.go_profile).place(x=320, y=5)
 
         # Pickup container
         pickup_box = Frame(lpink_box, bg="white", width=250, height=65)
@@ -45,6 +56,7 @@ class HomePage(Frame):
         self.pickup_entry.place(x=5, y=30, width=240, height=25)
         self.pickup_entry.bind("<FocusIn>", lambda e: self._clear_placeholder(self.pickup_entry, "Search Pickup Location"))
         self.pickup_entry.bind("<FocusOut>", lambda e: self._add_placeholder(self.pickup_entry, "Search Pickup Location"))
+        self.pickup_entry.bind("<KeyRelease>", lambda e: self.show_suggestions(e, self.pickup_entry))
 
         # Drop-off container
         dropoff_box = Frame(lpink_box, bg="white", width=250, height=65)
@@ -59,36 +71,33 @@ class HomePage(Frame):
         self.dropoff_entry.place(x=5, y=30, width=240, height=25)
         self.dropoff_entry.bind("<FocusIn>", lambda e: self._clear_placeholder(self.dropoff_entry, "Search Drop-off Location"))
         self.dropoff_entry.bind("<FocusOut>", lambda e: self._add_placeholder(self.dropoff_entry, "Search Drop-off Location"))
+        self.dropoff_entry.bind("<KeyRelease>", lambda e: self.show_suggestions(e, self.dropoff_entry))
 
         self.create_proceed_button(lpink_box).pack(pady=(20, 0))
-
-        # Bottom Nav Bar
-        nav_bar = Frame(self, bg="#ffc4d6", width=390, height=65)
-        nav_bar.place(x=0, y=779)
-
-        Button(nav_bar, text="🏠", font=("Arial", 20), bg="#ffc4d6", bd=0,
-               activebackground="#ffc4d6", cursor="hand2", command=self.go_home).place(x=40, y=5)
-        Button(nav_bar, text="📄", font=("Arial", 20), bg="#ffc4d6", bd=0,
-               activebackground="#ffc4d6", cursor="hand2", command=self.go_documents).place(x=175, y=5)
-        Button(nav_bar, text="👤", font=("Arial", 20), bg="#ffc4d6", bd=0,
-               activebackground="#ffc4d6", cursor="hand2", command=self.go_profile).place(x=320, y=5)
 
     def create_proceed_button(self, lpink_box):
         canvas = Canvas(lpink_box, width=250, height=26, bg="#ffc4d6", highlightthickness=0, cursor="hand2")
         canvas.create_rectangle(0, 0, 250, 26, fill="#f38c9f", outline="#f38c9f", width=2)
         canvas.create_text(125, 13, text="PROCEED", fill="white", font=("League Spartan", 10, "bold"))
-        
-        return canvas
-    
-    def clear_placeholder(self, entry_widget, placeholder_text):
-        if entry_widget.get() == placeholder_text:
-            entry_widget.delete(0, END)
-            entry_widget.config(fg="black")
 
-    def restore_placeholder(self, entry_widget, placeholder_text):
-        if not entry_widget.get():
-            entry_widget.insert(0, placeholder_text)
-            entry_widget.config(fg="gray")
+        canvas.bind("<Button-1>", self.on_proceed_clicked)
+        return canvas
+
+    def on_proceed_clicked(self, event):
+        pickup = self.pickup_entry.get()
+        dropoff = self.dropoff_entry.get()
+        if hasattr(self.parent, "show_booking_page"):
+            self.parent.show_booking_page(pickup, dropoff)
+
+    def _clear_placeholder(self, entry, placeholder):
+        if entry.get() == placeholder:
+            entry.delete(0, END)
+            entry.config(fg="black")
+
+    def _add_placeholder(self, entry, placeholder):
+        if not entry.get():
+            entry.insert(0, placeholder)
+            entry.config(fg="gray")
 
     def go_home(self):
         if hasattr(self.parent, "show_home_page"):
@@ -100,3 +109,37 @@ class HomePage(Frame):
     def go_profile(self):
         if hasattr(self.parent, "show_account_page"):
             self.parent.show_account_page()
+
+    def show_suggestions(self, event, entry):
+        text = entry.get()
+        if text in ["", "Search Pickup Location", "Search Drop-off Location"]:
+            if self.suggestions_box:
+                self.suggestions_box.destroy()
+            return
+
+        try:
+            suggestions = self.parent.backend.autocomplete_place(text)
+        except Exception as e:
+            print("Autocomplete error:", e)
+            suggestions = []
+
+        if self.suggestions_box:
+            self.suggestions_box.destroy()
+
+        self.suggestions_box = Listbox(self, height=min(5, len(suggestions)), bg="white", fg="black", font=self.placeholder_font)
+        self.suggestions_box.place(x=entry.winfo_rootx() - self.winfo_rootx(),
+                                   y=entry.winfo_rooty() - self.winfo_rooty() + entry.winfo_height(),
+                                   width=entry.winfo_width())
+
+        for suggestion in suggestions:
+            self.suggestions_box.insert(END, suggestion)
+
+        self.active_entry = entry
+        self.suggestions_box.bind("<<ListboxSelect>>", self.select_suggestion)
+
+    def select_suggestion(self, event):
+        if self.suggestions_box and self.active_entry:
+            selected = self.suggestions_box.get(self.suggestions_box.curselection())
+            self.active_entry.delete(0, END)
+            self.active_entry.insert(0, selected)
+            self.suggestions_box.destroy()
