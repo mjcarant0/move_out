@@ -2,13 +2,14 @@ import os
 from tkinter import *
 from PIL import Image, ImageTk
 
-from .account_page import AccountPage
 from .splash_animation import Animation
 from .interactive_page import InteractivePage
 from .login_page import LoginPage
 from .signup_page import SignUpPage
+from .account_page import AccountPage
 from .home_page import HomePage
 from .booking_page import BookingPage
+from backend.ride_booking import RideBackend
 
 class MainWindow(Tk):
     '''
@@ -17,6 +18,7 @@ class MainWindow(Tk):
     '''
     def __init__(self):
         super().__init__()
+        self.backend = RideBackend(api_key="AIzaSyAOKrot0gO67ji8DpUmxN3FdXRBfMsCvRQ")
 
         os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -80,6 +82,14 @@ class MainWindow(Tk):
         self.home_page = HomePage(self)
         self.home_page.pack(fill=BOTH, expand=True)
 
+    def show_booking_page(self, pickup, dropoff):
+        # Hide current page
+        self.clear_current_page()
+
+        # Always create a new BookingPage with updated pickup and dropoff
+        self.booking_page = BookingPage(self, pickup, dropoff)
+        self.booking_page.pack(fill=BOTH, expand=True)
+
     def show_account_page(self):
         # Hide current page
         self.clear_current_page()
@@ -87,11 +97,3 @@ class MainWindow(Tk):
         # Create and show the account page
         self.account_page = AccountPage(self)
         self.account_page.pack(fill=BOTH, expand=True)
-
-    def show_booking_page(self):
-        # Hide current page
-        self.clear_current_page()
-
-        # Create and show the booking page
-        self.booking_page = BookingPage(self)
-        self.booking_page.pack(fill=BOTH, expand=True)
