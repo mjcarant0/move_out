@@ -1,12 +1,13 @@
+'''
+        This module provides the splash animation for Move Out.
+        It will display a gif in the splash screen.
+'''
+
 import os
 from tkinter import *
 from PIL import Image, ImageTk
 
 class Animation(Frame):
-    '''
-        This module provides the splash animation for Move Out.
-        It will display a gif in the splash screen.
-    '''
     def __init__(self, parent, callback=None):
         super().__init__(parent)
         self.callback = callback
