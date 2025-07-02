@@ -68,33 +68,51 @@ class BookedPage(Frame):
         info_frame.pack()
         info_frame.pack_propagate(False)
 
-        Label(info_frame, text="Booking ID", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee").place(x=25, y=15)
-        self.booking_id_label = Label(info_frame, text=".....", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee")
-        self.booking_id_label.place(x=300, y=15)
+        # Booking ID row
+        booking_row = Frame(info_frame, bg="#eeeeee")
+        booking_row.pack(fill=X, padx=25, pady=(10, 0))
 
-        Label(info_frame, text="Estimated Ride Duration", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee").place(x=25, y=35)
-        self.duration_label = Label(info_frame, text=".....", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee")
-        self.duration_label.place(x=310, y=35)
+        Label(booking_row, text="Booking ID", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee").pack(side=LEFT)
+        self.booking_id_label = Label(booking_row, text=".....", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee")
+        self.booking_id_label.pack(side=RIGHT)
+
+        # Duration row
+        duration_row = Frame(info_frame, bg="#eeeeee")
+        duration_row.pack(fill=X, padx=25, pady=(5, 0))
+
+        Label(duration_row, text="Estimated Ride Duration", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee").pack(side=LEFT)
+        self.duration_label = Label(duration_row, text=".....", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee")
+        self.duration_label.pack(side=RIGHT)
+
 
         # Placeholder Driver Info Frame
         driver_info_frame = Frame(self.options_frame, bg="white", width=390, height=60)
         driver_info_frame.pack(pady=(15, 15))
         driver_info_frame.pack_propagate(False)
 
-        # Circle (profile placeholder)
-        profile_canvas = Canvas(driver_info_frame, width=40, height=40, bg="white", highlightthickness=0)
-        profile_canvas.create_oval(2, 2, 38, 38, fill="#d9d9d9", outline="#d9d9d9")
-        profile_canvas.place(x=25, y=10)
+        # Load driver image based on backend data
+        try:
+            driver_info = self.backend.get_driver_info(self.selected_vehicle)
+            driver_img_filename = driver_info.get("img")
+            if driver_img_filename:
+                driver_img_path = os.path.join(os.path.dirname(__file__), "..", "media", driver_img_filename)
+                driver_image = Image.open(driver_img_path).resize((40, 40), Image.LANCZOS)
+                self.driver_photo = ImageTk.PhotoImage(driver_image)
+                Label(driver_info_frame, image=self.driver_photo, bg="white").place(x=25, y=10)
+            else:
+                print(f"[Warning] No driver image found for: {self.selected_vehicle}")
+        except Exception as e:
+            print(f"[Error] Loading driver image: {e}")
 
         # Driver Name Placeholder
         Label(driver_info_frame, text=self.driver_name, font=self.selection_font, fg="#8f8f8f", bg="white").place(x=80, y=20)
 
         # Vehicle Placeholder
         vehicle_label_frame = Frame(driver_info_frame, bg="white")
-        vehicle_label_frame.place(x=300, y=10)
+        vehicle_label_frame.pack(side="right", padx=(0, 20), pady=10, anchor="e")
 
-        Label(vehicle_label_frame, text=self.vehicle_name, font=self.selection_font, fg="#8f8f8f", bg="white", anchor="e").pack(anchor="e")
-        Label(vehicle_label_frame, text=self.license_plate, font=self.selection_font, fg="#8f8f8f", bg="white", anchor="e").pack(anchor="e")
+        Label(vehicle_label_frame, text=self.vehicle_name, font=self.selection_font, fg="#8f8f8f", bg="white", anchor="e", justify="right").pack(anchor="e")
+        Label(vehicle_label_frame, text=self.license_plate, font=self.selection_font, fg="#8f8f8f", bg="white", anchor="e", justify="right").pack(anchor="e")
 
         # Location Display
         location_frame = Frame(self.options_frame, bg="white", width=390, height=85)
