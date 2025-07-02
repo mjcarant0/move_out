@@ -23,6 +23,7 @@ class BookingPage(Frame):
 
         self.pickup_location = pickup_location
         self.dropoff_location = dropoff_location
+        self.distance_km = 0.0
 
         self.backend = RideBackend("AIzaSyAOKrot0gO67ji8DpUmxN3FdXRBfMsCvRQ")
 
@@ -144,6 +145,7 @@ class BookingPage(Frame):
             self.vehicle_widgets = {}
         self.vehicle_widgets[label] = (label_text, price)
 
+    # Selecting a Vehicle
     def select_vehicle(self, vehicle_name):
         self.selected_vehicle = vehicle_name
         for label_text, price_label in self.vehicle_widgets.values():
@@ -152,6 +154,16 @@ class BookingPage(Frame):
         if vehicle_name in self.vehicle_widgets:
             self.vehicle_widgets[vehicle_name][0].config(fg="black")
             self.vehicle_widgets[vehicle_name][1].config(fg="black")
+
+            # Update main price label with selected fare
+            fare = self.backend.calculate_fare(self.distance_km, vehicle_name)
+            self.price_value.config(text=f"\u20b1 {fare:.2f}")
+
+    # Update fare prices for each vehicle type
+    def update_fares(self):
+        for vehicle_type, (label_widget, price_widget) in self.vehicle_widgets.items():
+            fare = self.backend.calculate_fare(self.distance_km, vehicle_type)
+            price_widget.config(text=f"\u20b1 {fare:.2f}")
 
     def create_back_button(self, back_con):
         canvas = Canvas(back_con, width=60, height=26, bg="#ffc4d6", highlightthickness=0, cursor="hand2")
@@ -191,6 +203,7 @@ class BookingPage(Frame):
             self.warning_label = Label(self.options_frame, text="Please select a vehicle before confirming.", font=self.selection_font, fg="red", bg="white")
             self.warning_label.pack(pady=(5, 0))
 
+    # Load Static Map Image using Google Maps API
     def load_static_map(self):
         map_url = self.backend.generate_static_map_url(self.pickup_location, self.dropoff_location, use_polyline=True)
         if map_url:
@@ -206,10 +219,15 @@ class BookingPage(Frame):
         else:
             self.map_img_label.config(text="Map not available", fg="white", font=self.distance_font)
 
+        # Load and Display Distance
         try:
             distance = self.backend.get_distance_km(self.pickup_location, self.dropoff_location)
+            self.distance_km = distance 
             self.distance_value.config(text=f"{distance:.2f} km")
             self.distance_value.place(x=290)
+
+            # Update fares
+            self.update_fares()
         except Exception as e:
             print(f"Distance fetch error: {e}")
             self.distance_value.config(text="--")
