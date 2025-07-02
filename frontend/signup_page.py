@@ -1,3 +1,11 @@
+'''
+Sign Up Page UI for the MOVE OUT application using Tkinter.
+
+This module defines the SignUpPage class, which provides a styled user interface
+for account registration, including fields for first name, last name, mobile number,
+PIN entry, and navigation back to login.
+'''
+
 from tkinter import *
 from tkinter.font import Font
 from tkinter import ttk
@@ -25,7 +33,7 @@ class SignUpPage(Frame):
         Label(white_box, text="Create Your Account", font=self.create_font, fg="#ff99b8", bg="white").pack(pady=(30, 0))
         Label(white_box, text="SIGN UP", font=self.signup_font, fg="#ff99b8", bg="white").pack(pady=(0, 5))
 
-       # FIRST NAME Entry (aligned to phone and PIN)
+       # FIRST NAME Entry
         first_border = Frame(white_box, bg="#BDBDBD")
         first_border.pack(pady=(0, 10), padx=10, fill=X)
 
@@ -38,7 +46,7 @@ class SignUpPage(Frame):
         self.first_name_entry.bind("<FocusIn>", lambda e: self.clear_placeholder(self.first_name_entry, "First Name"))
         self.first_name_entry.bind("<FocusOut>", lambda e: self.restore_placeholder(self.first_name_entry, "First Name"))
 
-        # LAST NAME Entry (aligned to phone and PIN)
+        # LAST NAME Entry
         last_border = Frame(white_box, bg="#BDBDBD")
         last_border.pack(pady=(0, 10), padx=10, fill=X)
 
@@ -101,12 +109,12 @@ class SignUpPage(Frame):
         Button(white_box, text="SIGN UP", font=self.button_font, bg="#f38c9f", fg="white",
                activebackground="#ffc4d6", bd=0, cursor="hand2", command=self.on_signup_clicked).place(x=70, y=340, width=160, height=25)
 
-        # Line separator (moved lower)
+        # Line separator 
         line = Frame(white_box, bg="#ffc4d6", height=1, width=270)
         line.pack(pady=(50, 10))  # Increased top margin
 
-        # Already have an account (moved lower)
-        Label(white_box, text="Already have an Account?", font=self.create_font, fg="#ff99b8", bg="white").pack(pady=(0, 15))
+        # Already have an account 
+        Label(white_box, text="Already have an Account?", font=self.create_font, fg="#ff99b8", bg="white").pack(pady=(5, 20))
 
         # Log in button
         self.login_button = self.create_login_button()
