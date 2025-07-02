@@ -11,6 +11,7 @@ from .home_page import HomePage
 from .booking_page import BookingPage
 from backend.ride_booking import RideBackend
 from .looking_page import LookingPage
+from .ride_arrival_page import RideArrivalPage
 
 class MainWindow(Tk):
     '''
@@ -106,3 +107,11 @@ class MainWindow(Tk):
         # Create and show the looking page
         self.looking_page = LookingPage(self, pickup, dropoff, vehicle, price)
         self.looking_page.pack(fill=BOTH, expand=True)
+
+    def show_ride_arrival_page(self, pickup, dropoff, vehicle, price):
+        # Hide current page
+        self.clear_current_page()
+
+        # Create and show the looking page
+        self.ride_arrival_page = RideArrivalPage(self, pickup, dropoff, vehicle, price)
+        self.ride_arrival_page.pack(fill="both", expand=True)
