@@ -14,22 +14,25 @@ class RideBackend:
         # Fixed driver and vehicle info
         self.driver_data = {
             "Motorcycle": {
+                "img": "moto_rider.png",
                 "driver_name": "Princess Marian",
                 "vehicle_name": "Suzuki XR",
                 "license_plate": "ABC-123"
             },
             "4-seater": {
+                "img": "4seater_driver.png",
                 "driver_name": "Mary Baruruth",
                 "vehicle_name": "Honda Civic",
                 "license_plate": "XYZ-456"
             },
             "6-seater": {
+                "img": "6seater_driver.png",
                 "driver_name": "Maryjoy Caranters",
                 "vehicle_name": "Toyota 2022",
                 "license_plate": "DEF-789"
             }
         }
-
+        
     # Autocomplete place suggestions
     def autocomplete_place(self, input_text):
         try:
