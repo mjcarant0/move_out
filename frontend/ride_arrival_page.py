@@ -30,10 +30,11 @@ class RideArrivalPage(Frame):
         self.backend = RideBackend("AIzaSyAOKrot0gO67ji8DpUmxN3FdXRBfMsCvRQ")
 
         # Fonts
-        self.font_small = Font.Font(family="Montserrat", size=10)
+        self.booking_info_font = Font.Font(family="Montserrat", size=12)
+        self.loading_font = Font.Font(family="Montserrat", size=15, weight="bold")
         self.location_font = Font.Font(family="Montserrat", size=11, weight="bold")
         self.distance_font = Font.Font(family="Montserrat", size=10, weight="bold")
-        self.selection_font = Font.Font(family="Montserrat", size=10)
+        self.selection_font = Font.Font(family="Montserrat", size=12, weight="bold")
         self.back_font = Font.Font(family="League Spartan", size=12, weight="bold")
         self.cancel_font = Font.Font(family="League Spartan", size=12, weight="bold")
 
@@ -44,12 +45,12 @@ class RideArrivalPage(Frame):
         self.create_back_button(back_con).place(x=10, y=12)
 
         # Map Container
-        self.map_frame = Frame(self, width=390, height=350, bg="gray")
+        self.map_frame = Frame(self, width=390, height=350, bg="#8f8f8f")
         self.map_frame.pack(pady=0)
         self.map_frame.pack_propagate(False)
 
         # Map Image
-        self.map_img_label = Label(self.map_frame, bg="gray")
+        self.map_img_label = Label(self.map_frame, bg="#8f8f8f")
         self.map_img_label.pack(expand=True)
 
         # Option Container
@@ -62,15 +63,15 @@ class RideArrivalPage(Frame):
         info_frame.pack()
         info_frame.pack_propagate(False)
 
-        Label(info_frame, text="Booking ID", font=self.font_small, fg="gray", bg="#eeeeee").place(x=30, y=10)
-        self.booking_id_label = Label(info_frame, text=".....", font=self.font_small, fg="black", bg="#eeeeee")
-        self.booking_id_label.place(x=250, y=10)
+        Label(info_frame, text="Booking ID", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee").place(x=25, y=10)
+        self.booking_id_label = Label(info_frame, text=".....", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee")
+        self.booking_id_label.place(x=300, y=10)
 
-        Label(info_frame, text="Estimated Ride Duration", font=self.font_small, fg="gray", bg="#eeeeee").place(x=30, y=35)
-        self.duration_label = Label(info_frame, text=".....", font=self.font_small, fg="black", bg="#eeeeee")
-        self.duration_label.place(x=250, y=35)
+        Label(info_frame, text="Estimated Ride Duration", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee").place(x=25, y=35)
+        self.duration_label = Label(info_frame, text=".....", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee")
+        self.duration_label.place(x=310, y=35)
 
-        Label(info_frame, text="Rider is on the way...", font=self.font_small, fg="gray", bg="#eeeeee").place(x=30, y=65)
+        Label(info_frame, text="Rider is on the way...", font=self.loading_font, fg="#8f8f8f", bg="#eeeeee").place(anchor="center", x=195, y=72)
 
         # Location Display
         location_frame = Frame(self.options_frame, bg="white", width=390, height=110)
@@ -110,7 +111,7 @@ class RideArrivalPage(Frame):
         distance_container.pack(pady=(5, 0))
         Label(distance_container, text="Distance", font=self.distance_font, fg="#8f8f8f", bg="white").place(x=5)
         self.distance_value = Label(distance_container, text="--", font=self.distance_font, fg="#8f8f8f", bg="white")
-        self.distance_value.place(x=300)
+        self.distance_value.place(x=290)
 
         # [Changed] Shows selected vehicle as static info instead of interactive rows
         vehicle_frame = Frame(self.options_frame, bg="white", width=390, height=60)
@@ -137,8 +138,8 @@ class RideArrivalPage(Frame):
             self.vehicle_icon = None
 
         Label(vehicle_frame, image=self.vehicle_icon, bg="white").place(x=30, y=10)
-        Label(vehicle_frame, text=self.selected_vehicle, font=self.selection_font, fg="#8f8f8f", bg="white").place(x=85, y=18)
-        Label(vehicle_frame, text=self.selected_price, font=self.selection_font, fg="#8f8f8f", bg="white").place(x=285, y=18)
+        Label(vehicle_frame, text=self.selected_vehicle, font=self.selection_font, fg="#8f8f8f", bg="white").place(x=85, y=20)
+        Label(vehicle_frame, text=self.selected_price, font=self.selection_font, fg="#8f8f8f", bg="white").place(x=300, y=20)
 
         # [Replaced] CONFIRM button with CANCEL button to go back to HomePage
         cancel_con = Frame(self, bg="#ff8fab", width=390, height=50)
@@ -186,7 +187,7 @@ class RideArrivalPage(Frame):
                     self.map_img_label.config(image=self.map_photo)
             except Exception as e:
                 print(f"Map image error: {e}")
-                self.map_img_label.config(text="Map unavailable", fg="white", font=self.font_small)
+                self.map_img_label.config(text="Map unavailable", fg="white", font=self.booking_info_font)
 
     # [Added] Calls backend methods to fill in booking ID, ride duration, and distance
     def populate_backend_info(self):
