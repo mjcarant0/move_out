@@ -191,6 +191,8 @@ class BookingPage(Frame):
     # Load Static Map Image using Google Maps API
     def load_static_map(self):
         backend = RideBackend("AIzaSyAOKrot0gO67ji8DpUmxN3FdXRBfMsCvRQ")
+
+        # Load Static Map
         map_url = backend.generate_static_map_url(self.pickup_location, self.dropoff_location, use_polyline=True)
         if map_url:
             try:
@@ -204,3 +206,12 @@ class BookingPage(Frame):
                 self.map_img_label.config(text="Map not available", fg="white", font=self.distance_font)
         else:
             self.map_img_label.config(text="Map not available", fg="white", font=self.distance_font)
+
+        # Load and Display Distance
+        try:
+            distance = backend.get_distance_km(self.pickup_location, self.dropoff_location)
+            self.distance_value.config(text=f"{distance:.2f} km")
+            self.distance_value.place(x=290)
+        except Exception as e:
+            print(f"Distance fetch error: {e}")
+            self.distance_value.config(text="--")
