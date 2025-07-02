@@ -11,6 +11,11 @@ from urllib.request import urlopen
 from io import BytesIO
 
 class BookingPage(Frame):
+    '''
+        This program provides the booking page for Move Out.
+        It allows the user to book their chosen ride
+        and see the pinned locations in the map.
+    '''
     def __init__(self, parent, pickup_location, dropoff_location):
         super().__init__(parent)
         self.parent = parent
@@ -158,11 +163,30 @@ class BookingPage(Frame):
         canvas = Canvas(confirm_con, width=80, height=26, bg="#ffc4d6", highlightthickness=0, cursor="hand2")
         canvas.create_rectangle(0, 0, 80, 26, fill="white", outline="white", width=2)
         canvas.create_text(40, 13, text="CONFIRM", fill="#f38c9f", font=self.confirm_font, anchor="center")
+        canvas.bind("<Button-1>", self.on_confirm_clicked)
         return canvas
 
     def on_back_clicked(self, event):
         if hasattr(self.parent, "show_home_page"):
             self.parent.show_home_page()
+
+    def on_confirm_clicked(self, event):
+        if hasattr(self, 'selected_vehicle'):
+            vehicle = self.selected_vehicle
+            price = self.price_value.cget("text")
+            if hasattr(self.parent, "show_looking_page"):
+                self.parent.show_looking_page(self.pickup_location, self.dropoff_location, vehicle, price)
+        else:
+            self.show_vehicle_warning()
+
+    def show_vehicle_warning(self):
+        # If already exists, just raise it
+        if hasattr(self, 'warning_label') and self.warning_label.winfo_exists():
+            self.warning_label.lift()
+        else:
+            self.warning_label = Label(self.options_frame, text="Please select a vehicle before confirming.",
+                                    font=self.selection_font, fg="red", bg="white")
+            self.warning_label.pack(pady=(5, 0))
 
     # Load Static Map Image using Google Maps API
     def load_static_map(self):
