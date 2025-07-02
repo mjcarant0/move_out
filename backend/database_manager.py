@@ -32,7 +32,32 @@ class DatabaseManager:
                         pin TEXT NOT NULL
                     )
                 ''')   # If the table already exists, this won’t recreate it
-                conn.commit()  # Saves changes to the database
+                cursor.execute('''
+                    CREATE TABLE IF NOT EXISTS pending_bookings (
+                        booking_id TEXT PRIMARY KEY,
+                        user_phone TEXT NOT NULL,
+                        vehicle_id TEXT NOT NULL,
+                        vehicle_type TEXT NOT NULL,
+                        driver_name TEXT NOT NULL,
+                        license_plate TEXT NOT NULL,
+                        distance REAL NOT NULL,
+                        fare REAL NOT NULL,
+                        pickup TEXT NOT NULL,
+                        dropoff TEXT NOT NULL,
+                        timestamp TEXT NOT NULL
+                    )
+                ''')
+
+            # CANCELLED BOOKINGS TABLE (same structure, empty)
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS cancelled_bookings AS SELECT * FROM pending_bookings WHERE 0
+            ''')
+
+            # COMPLETED BOOKINGS TABLE (same structure, empty)
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS completed_bookings AS SELECT * FROM pending_bookings WHERE 0
+            ''')
+            conn.commit()  # Saves changes to the database
                     # If something goes wrong with SQLite (like a bad connection), raise a clearer error
        
         # If an issue with sqlite occurs, display an error message.
