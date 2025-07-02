@@ -32,7 +32,25 @@ class RideBackend:
                 "license_plate": "DEF-789"
             }
         }
-        
+    
+    # Calculate fare based on distance and vehicle type
+    def calculate_fare(self, distance_km, vehicle_type):
+        # Base prices
+        base_fares = {
+            "Motorcycle": 50,
+            "4-seater": 120,
+            "6-seater": 150
+        }
+
+        base_fare = base_fares.get(vehicle_type, 50)  # Default to 50 if unknown
+
+        if distance_km <= 2:
+            return base_fare
+        elif distance_km <= 7:
+            return base_fare + (distance_km - 2) * 10
+        else:
+            return base_fare + (5 * 10) + (distance_km - 7) * 15
+
     # Autocomplete place suggestions
     def autocomplete_place(self, input_text):
         try:
