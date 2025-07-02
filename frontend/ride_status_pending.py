@@ -32,6 +32,10 @@ class RideStatus(Frame):
         dpink_box.place(relx=0.5, y=400, anchor="n")
         dpink_box.pack_propagate(False)
 
+        dpink_small_box = Frame(lpink_box, bg="#FB6F92", width=83, height=17)
+        dpink_small_box.place(x=367 - 83 - 8, y=8)  # (lpink width - box width - offset), top offset
+        dpink_small_box.pack_propagate(False)
+
         # Left button
         dpink_button1 = Frame(self, bg="#FB6F92", width=111, height=27)
         dpink_button1.place(relx=0.18, y=135, anchor="n")  # Left aligned
