@@ -48,16 +48,16 @@ class DatabaseManager:
                     )
                 ''')
 
-            # CANCELLED BOOKINGS TABLE (same structure, empty)
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS cancelled_bookings AS SELECT * FROM pending_bookings WHERE 0
-            ''')
+                # CANCELLED BOOKINGS TABLE (same structure, empty)
+                cursor.execute('''
+                    CREATE TABLE IF NOT EXISTS cancelled_bookings AS SELECT * FROM pending_bookings WHERE 0
+                ''')
 
-            # COMPLETED BOOKINGS TABLE (same structure, empty)
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS completed_bookings AS SELECT * FROM pending_bookings WHERE 0
-            ''')
-            conn.commit()  # Saves changes to the database
+                # COMPLETED BOOKINGS TABLE (same structure, empty)
+                cursor.execute('''
+                    CREATE TABLE IF NOT EXISTS completed_bookings AS SELECT * FROM pending_bookings WHERE 0
+                ''')
+                conn.commit()  # Saves changes to the database
                     # If something goes wrong with SQLite (like a bad connection), raise a clearer error
        
         # If an issue with sqlite occurs, display an error message.
