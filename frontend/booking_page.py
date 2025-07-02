@@ -86,7 +86,7 @@ class BookingPage(Frame):
         distance_container.pack(pady=(5, 0))
         Label(distance_container, text="Distance", font=self.distance_font, fg="#8f8f8f", bg="white").place(x=5)
         self.distance_value = Label(distance_container, text="--", font=self.distance_font, fg="#8f8f8f", bg="white")
-        self.distance_value.place(x=300)
+        self.distance_value.place(x=330)
 
         # Vehicle Selection Container
         vehicle_section = Frame(self.options_frame, bg="white")
