@@ -77,7 +77,7 @@ class HelpCenterPage(Frame):
 
         self.title_font = Font(family="Poppins", size=30, weight="bold")
         self.subheading_font = Font(family="League Spartan", size=15, weight="bold")
-        self.question_font = Font(family="Montserrat", size=12)
+        self.question_font = Font(family="Montserrat", size=12, weight="bold")
         self.answer_font = Font(family="Montserrat", size=10)
 
         self.pack(fill=BOTH, expand=True)
