@@ -16,7 +16,7 @@ class BookedPage(Frame):
         It displays the ride details, map, and allows the user to cancel the ride.
         It also shows the booking ID, estimated duration, and distance.
     '''
-    def __init__(self, parent, pickup_location, dropoff_location, selected_vehicle, selected_price):
+    def __init__(self, parent, pickup_location, dropoff_location, selected_vehicle, selected_price, booking_id, estimated_duration, license_plate, driver_name, vehicle_name):
         super().__init__(parent)
         self.parent = parent
         self.configure(bg="white")
@@ -25,6 +25,11 @@ class BookedPage(Frame):
         self.dropoff_location = dropoff_location    
         self.selected_vehicle = selected_vehicle
         self.selected_price = selected_price
+        self.license_plate = license_plate
+        self.driver_name = driver_name
+        self.vehicle_name = vehicle_name
+        self.booking_id = booking_id
+        self.estimated_duration = estimated_duration
 
         # [Added] RideBackend instantiated to access backend methods like booking ID, distance, duration
         self.backend = RideBackend("AIzaSyAOKrot0gO67ji8DpUmxN3FdXRBfMsCvRQ")
@@ -63,9 +68,9 @@ class BookedPage(Frame):
         info_frame.pack()
         info_frame.pack_propagate(False)
 
-        Label(info_frame, text="Booking ID", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee").place(x=25, y=10)
+        Label(info_frame, text="Booking ID", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee").place(x=25, y=15)
         self.booking_id_label = Label(info_frame, text=".....", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee")
-        self.booking_id_label.place(x=300, y=10)
+        self.booking_id_label.place(x=300, y=15)
 
         Label(info_frame, text="Estimated Ride Duration", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee").place(x=25, y=35)
         self.duration_label = Label(info_frame, text=".....", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee")
@@ -82,10 +87,14 @@ class BookedPage(Frame):
         profile_canvas.place(x=25, y=10)
 
         # Driver Name Placeholder
-        Label(driver_info_frame, text="--", font=self.selection_font, fg="#8f8f8f", bg="white").place(x=80, y=20)
+        Label(driver_info_frame, text=self.driver_name, font=self.selection_font, fg="#8f8f8f", bg="white").place(x=80, y=20)
 
         # Vehicle Placeholder
-        Label(driver_info_frame, text="--", font=self.selection_font, fg="#8f8f8f", bg="white").place(x=350, y=20)
+        vehicle_label_frame = Frame(driver_info_frame, bg="white")
+        vehicle_label_frame.place(x=300, y=10)
+
+        Label(vehicle_label_frame, text=self.vehicle_name, font=self.selection_font, fg="#8f8f8f", bg="white", anchor="e").pack(anchor="e")
+        Label(vehicle_label_frame, text=self.license_plate, font=self.selection_font, fg="#8f8f8f", bg="white", anchor="e").pack(anchor="e")
 
         # Location Display
         location_frame = Frame(self.options_frame, bg="white", width=390, height=85)
@@ -117,12 +126,12 @@ class BookedPage(Frame):
 
         label_column = Frame(info_row, bg="white")
         label_column.pack(side="left", anchor="n", padx=10)
-        Label(label_column, text="Pickup", font=self.location_font, fg="#8f8f8f", bg="white", anchor="w").pack(anchor="w")
-        Label(label_column, text="Drop-off", font=self.location_font, fg="#8f8f8f", bg="white", anchor="w").pack(anchor="w", pady=(22, 0))
+        Label(label_column, text=self.pickup_location, font=self.location_font, fg="#8f8f8f", bg="white", anchor="w").pack(anchor="w")
+        Label(label_column, text=self.dropoff_location, font=self.location_font, fg="#8f8f8f", bg="white", anchor="w").pack(anchor="w", pady=(22, 0))
 
         # Distance Info Container
         distance_container = Frame(location_frame, bg="white", width=350, height=20)
-        distance_container.pack()
+        distance_container.pack(pady=(5, 0))
         Label(distance_container, text="Distance", font=self.distance_font, fg="#8f8f8f", bg="white").place(x=5)
         self.distance_value = Label(distance_container, text="--", font=self.distance_font, fg="#8f8f8f", bg="white")
         self.distance_value.place(x=290)
@@ -190,10 +199,8 @@ class BookedPage(Frame):
 
     # [Added] Calls backend methods to fill in booking ID, ride duration, and distance
     def populate_backend_info(self):
-        booking_id = self.backend.generate_booking_id()
-        duration = self.backend.get_estimated_duration(self.pickup_location, self.dropoff_location)
         distance = self.backend.get_distance_km(self.pickup_location, self.dropoff_location)
 
-        self.booking_id_label.config(text=booking_id)
-        self.duration_label.config(text=duration)
+        self.booking_id_label.config(text=self.booking_id)
+        self.duration_label.config(text=self.estimated_duration)
         self.distance_value.config(text=f"{distance:.2f} km")
