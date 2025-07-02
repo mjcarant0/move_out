@@ -72,8 +72,24 @@ class LookingPage(Frame):
 
         Label(info_frame, text="Looking for a Ride...", font=self.loading_font, fg="#8f8f8f", bg="#eeeeee").place(anchor="center", x=195, y=72)
 
+        # Placeholder Driver Info Frame
+        driver_info_frame = Frame(self.options_frame, bg="white", width=390, height=60)
+        driver_info_frame.pack(pady=(8, 10))
+        driver_info_frame.pack_propagate(False)
+
+        # Circle (profile placeholder)
+        profile_canvas = Canvas(driver_info_frame, width=40, height=40, bg="white", highlightthickness=0)
+        profile_canvas.create_oval(2, 2, 38, 38, fill="#d9d9d9", outline="#d9d9d9")
+        profile_canvas.place(x=25, y=10)
+
+        # Driver Name Placeholder
+        Label(driver_info_frame, text="--", font=self.selection_font, fg="#8f8f8f", bg="white").place(x=80, y=20)
+
+        # Vehicle Placeholder
+        Label(driver_info_frame, text="--", font=self.selection_font, fg="#8f8f8f", bg="white").place(x=350, y=20)
+
         # Location Display
-        location_frame = Frame(self.options_frame, bg="white", width=390, height=110)
+        location_frame = Frame(self.options_frame, bg="white", width=390, height=85)
         location_frame.pack()
         location_frame.pack_propagate(False)
 
@@ -93,7 +109,7 @@ class LookingPage(Frame):
 
         # Row and Column for proper image and text alignment
         info_row = Frame(location_frame, bg="white")
-        info_row.pack(anchor="w", padx=30, pady=(25, 0))
+        info_row.pack(anchor="w", padx=30)
         icon_column = Frame(info_row, bg="white")
         icon_column.pack(side="left", anchor="n")
         Label(icon_column, image=self.pickup_img, bg="white").pack()
@@ -107,7 +123,7 @@ class LookingPage(Frame):
 
         # Distance Info Container
         distance_container = Frame(location_frame, bg="white", width=350, height=20)
-        distance_container.pack(pady=(5, 0))
+        distance_container.pack()
         Label(distance_container, text="Distance", font=self.distance_font, fg="#8f8f8f", bg="white").place(x=5)
         self.distance_value = Label(distance_container, text="--", font=self.distance_font, fg="#8f8f8f", bg="white")
         self.distance_value.place(x=330)
