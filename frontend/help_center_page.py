@@ -1,33 +1,47 @@
+"""
+Help Center – FAQ UI for the MOVE OUT application using Tkinter.
+
+This module defines the HelpCenterPage class, which provides a
+searchable list of FAQs with expandable answers
+"""
+
 from tkinter import *
-import tkinter.font as tkFont
+from tkinter.font import Font
+from PIL import Image, ImageTk
+import os, sys
+
+# Import backend search
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'backend')))
+from backend_faq import search_faqs
+
 
 class FAQItem(Frame):
-    def __init__(self, parent, question, answer):
+    def __init__(self, parent, question, answer, q_font, a_font):
         super().__init__(parent, bg="#ffc4d6")
-        self.question = question
-        self.answer_text = answer
         self.is_expanded = False
 
         self.question_button = Button(
-            self, 
-            text=self.question, 
-            font=("Montserrat", 12), 
-            bg="#f38c9f", 
+            self,
+            text=question,
+            font=q_font,
+            bg="#f38c9f",
             fg="white",
-            anchor="w", 
+            anchor="w",
             command=self.toggle,
             relief=FLAT,
-            padx=10
+            padx=10,
+            wraplength=320,
+            justify="left"
         )
-        self.question_button.pack(fill="x", pady=(5, 0))
+        self.question_button.pack(fill="x", pady=(5, 0), ipady=10)  # Moved ipady here ✅
 
         self.answer_label = Label(
-            self, 
-            text=self.answer_text, 
-            font=("Montserrat", 10),
-            wraplength=320, 
-            justify="left", 
-            bg="white", 
+            self,
+            text=answer,
+            font=a_font,
+            wraplength=320,
+            justify="left",
+            bg="white",
             fg="black",
             padx=10,
             pady=5
@@ -40,77 +54,112 @@ class FAQItem(Frame):
             self.answer_label.pack(fill="x", padx=10, pady=(0, 5))
         self.is_expanded = not self.is_expanded
 
-    def clear_placeholder(self, entry, placeholder):
+    @staticmethod
+    def clear_placeholder(entry, placeholder):
         if entry.get() == placeholder:
             entry.delete(0, END)
+            entry.config(fg="black")
 
-    def restore_placeholder(self, entry, placeholder):
+    @staticmethod
+    def restore_placeholder(entry, placeholder):
         if entry.get() == "":
             entry.insert(0, placeholder)
+            entry.config(fg="#BDBDBD")
 
-# Main app
-root = Tk()
-root.title("Help Center - FAQ")
-root.geometry("390x844")
-root.config(bg="#ffc4d6")
 
-# Main heading
-heading = Label(root, text="HELP CENTER", font=('Poppins', 30, 'bold'), fg="#f38c9f", bg="#ffc4d6")
-heading.pack(pady=0)
+class HelpCenterPage(Frame):
+    def __init__(self, parent):
+        super().__init__(parent, bg="#ffc4d6")
 
-# White box container
-white_box = Frame(root, bg="white", width=390, height=100)
-white_box.pack(pady=(0, 0))
-white_box.pack_propagate(False)
+        parent.geometry("390x844")
+        parent.resizable(False, False)
+        parent.title("Help Center - FAQ")
 
-# Subheading
-subheading = Label(white_box, text="HOW CAN WE HELP YOU TODAY?", font=('League spartan', 15, 'bold'), fg="#ffc4d6", bg="white")
-subheading.pack(pady=5)
+        self.title_font = Font(family="Poppins", size=30, weight="bold")
+        self.subheading_font = Font(family="League Spartan", size=15, weight="bold")
+        self.question_font = Font(family="Montserrat", size=12)
+        self.answer_font = Font(family="Montserrat", size=10)
 
-# Search bar
-search_frame = Frame(white_box, bd=1, relief=SOLID, bg="#ffc4d6")
-search_frame.pack(pady=10, fill=X, padx=20)
-search_var = StringVar()
-search_entry = Entry(search_frame, textvariable=search_var)
-search_entry.pack(fill=X, ipady=5)
-search_entry.insert(0, "Search...")
-search_entry.bind("<FocusIn>", lambda e: FAQItem.clear_placeholder(None, search_entry, "Search..."))
-search_entry.bind("<FocusOut>", lambda e: FAQItem.restore_placeholder(None, search_entry, "Search..."))
+        self.pack(fill=BOTH, expand=True)
 
-# FAQ Items
-faq_data = [
-    ("How do I look or ride?", 
-     """1. It looks a little over long for
-2. I don't see the original drop-off location
-3. I have 70 people together
-4. Choose multiple followups. Get classified or can be selected
-5. Do not open your left to cover the same time
-6. Your first time booked Passer will be a driver."""),
-    
-    ("Where can I see my ride status?", 
-     """At the bottom center of the screen, tap the 'Ride Status' button.
+        # Load back icon
+        image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'media', 'back-button.png'))
+        arrow_img = Image.open(image_path).resize((32, 32), Image.Resampling.LANCZOS)
+        self.back_icon = ImageTk.PhotoImage(arrow_img)
 
-You can view your Pending, Canceled, and Completed rides there"""),
-     
-    ("How do I cancel a ride I booked?", 
-     """Tap the bottom center button to go to Ride Status.
+        # Back button at top-left
+        icon_label = Label(self, image=self.back_icon, bg="#ffc4d6", cursor="hand2")
+        icon_label.place(x=15, y=45)
+        icon_label.bind("<Button-1>", lambda e: print("Back clicked"))  # Replace with actual navigation later
 
-In the Pending section, tap the "CANCEL" button next to the ride you want to cancel"""),
-     
-    ("How do I know if my ride is confirmed?", 
-     """After booking, a confirmation message will appear.
+        # Title centered
+        title_label = Label(
+            self,
+            text="HELP CENTER",
+            font=self.title_font,
+            fg="#f38c9f",
+            bg="#ffc4d6"
+        )
+        title_label.pack(pady=(30, 10))
 
-You can also check Ride Status > Pending to see your current ride"""),
-     
-    ("Can I change my pickup or trip off after booking?", 
-     """No, once a ride is confirmed, you cannot change the location.
+        # White box container
+        white_box = Frame(self, bg="white", width=390, height=100)
+        white_box.pack(pady=(0, 0))
+        white_box.pack_propagate(False)
 
-You’ll need to cancel the ride and book again with the correct details""")
-]
+        Label(white_box, text="HOW CAN WE HELP YOU TODAY?",
+              font=self.subheading_font, fg="#ffc4d6", bg="white").pack(pady=5)
 
-# Create FAQ items
-for q, a in faq_data:
-    item = FAQItem(root, q, a)
-    item.pack(fill="x", padx=20, pady=2)
+        # Search bar
+        search_frame = Frame(white_box, bg="#BDBDBD", highlightbackground="#BDBDBD", highlightthickness=1)
+        search_frame.pack(pady=10, fill=X, padx=20)
 
-root.mainloop()
+        self.search_var = StringVar()
+        search_entry = Entry(search_frame, textvariable=self.search_var, font=self.question_font,
+                             fg="#BDBDBD", bg="white", relief=FLAT)
+        search_entry.pack(fill=X, ipady=5)
+        search_entry.insert(0, "Search...")
+        search_entry.bind("<FocusIn>", lambda e: FAQItem.clear_placeholder(search_entry, "Search..."))
+        search_entry.bind("<FocusOut>", lambda e: FAQItem.restore_placeholder(search_entry, "Search..."))
+        search_entry.bind("<Return>", lambda e: self.display_faqs(self.search_var.get().strip()))
+
+        # Scrollable canvas
+        canvas_frame = Frame(self, bg="#ffc4d6")
+        canvas_frame.pack(fill=BOTH, expand=True)
+
+        self.canvas = Canvas(canvas_frame, bg="#ffc4d6", highlightthickness=0, width=390)
+        self.canvas.pack(side=LEFT, fill=BOTH, expand=True)
+
+        self.faq_frame = Frame(self.canvas, bg="#ffc4d6")
+        self.faq_window = self.canvas.create_window((0, 0), window=self.faq_frame, anchor="nw", width=390)
+
+        self.canvas.bind("<Configure>", lambda e: self.canvas.itemconfig(self.faq_window, width=e.width))
+        self.faq_frame.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
+
+        # Scroll events
+        self.canvas.bind_all("<MouseWheel>", lambda e: self.canvas.yview_scroll(int(-1 * (e.delta / 120)), "units"))
+        self.canvas.bind_all("<Button-4>", lambda e: self.canvas.yview_scroll(-1, "units"))  # Linux scroll up
+        self.canvas.bind_all("<Button-5>", lambda e: self.canvas.yview_scroll(1, "units"))   # Linux scroll down
+
+        self.display_faqs("")
+
+    def display_faqs(self, keyword=""):
+        for widget in self.faq_frame.winfo_children():
+            widget.destroy()
+
+        faqs = search_faqs(keyword)
+
+        if not faqs:
+            Label(self.faq_frame, text="No results found.",
+                  font=self.question_font, bg="#ffc4d6").pack(pady=20, fill="x")
+            return
+
+        for q, a in faqs:
+            item = FAQItem(self.faq_frame, q, a, self.question_font, self.answer_font)
+            item.pack(fill="x", padx=20, pady=2)
+
+
+if __name__ == "__main__":
+    root = Tk()
+    HelpCenterPage(root)
+    root.mainloop()
