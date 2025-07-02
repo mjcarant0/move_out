@@ -31,6 +31,9 @@ class HomePage(Frame):
         lpink_box.place(x=45, y=157)
         lpink_box.pack_propagate(False)
 
+        self.warning_label = Label(lpink_box, text="", fg="red", bg="#ffe5ec", font=self.placeholder_font)
+        self.warning_label.pack(pady=(10, 0))
+
         # Navigation Bar
         nav_bar = Frame(self, bg="#ffc4d6", width=390, height=65)
         nav_bar.place(y=719)
@@ -48,7 +51,7 @@ class HomePage(Frame):
         pickup_box.pack(pady=(40, 0))
         pickup_box.pack_propagate(False)
 
-        Label(pickup_box, text="Pickup", font=self.label_font, fg="black", bg="white").place(x=5, y=5)
+        Label(pickup_box, text="Pickup", font=self.label_font, fg="#f38c9f", bg="white").place(x=5, y=5)
 
         # Pickup Input
         self.pickup_entry = Entry(pickup_box, font=self.placeholder_font, fg="#bdbdbd", bg="white", bd=0, relief="flat", highlightthickness=0)
@@ -63,7 +66,7 @@ class HomePage(Frame):
         dropoff_box.pack(pady=(20, 0))
         dropoff_box.pack_propagate(False)
 
-        Label(dropoff_box, text="Drop-off", font=self.label_font, fg="black", bg="white").place(x=5, y=5)
+        Label(dropoff_box, text="Drop-off", font=self.label_font, fg="#f38c9f", bg="white").place(x=5, y=5)
 
         # Drop-off Input
         self.dropoff_entry = Entry(dropoff_box, font=self.placeholder_font, fg="#bdbdbd", bg="white", bd=0, relief="flat", highlightthickness=0)
@@ -84,8 +87,15 @@ class HomePage(Frame):
         return canvas
 
     def on_proceed_clicked(self, event):
-        pickup = self.pickup_entry.get()
-        dropoff = self.dropoff_entry.get()
+        pickup = self.pickup_entry.get().strip()
+        dropoff = self.dropoff_entry.get().strip()
+
+        if pickup == "" or pickup == "Search Pickup Location" or dropoff == "" or dropoff == "Search Drop-off Location":
+            self.warning_label.config(text="Please fill out both Pickup and Drop-off locations.")
+            return
+        else:
+            self.warning_label.config(text="")  # Clear warning if inputs are valid
+
         if hasattr(self.parent, "show_booking_page"):
             self.parent.show_booking_page(pickup, dropoff)
 
