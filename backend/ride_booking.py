@@ -1,11 +1,17 @@
 import googlemaps
 import urllib.parse
+import random
+import string
 
 class RideBackend:
+    '''
+    A class to interact with Google Maps API and Booking Page/s for ride booking functionalities.
+    '''
     def __init__(self, api_key):
         self.api_key = api_key
         self.gmaps = googlemaps.Client(key=api_key)
 
+    # Autocomplete place suggestions
     def autocomplete_place(self, input_text):
         try:
             results = self.gmaps.places_autocomplete(input_text)
@@ -14,6 +20,7 @@ class RideBackend:
             print(f"Autocomplete error: {e}")
             return []
 
+    # Get coordinates (lat, lng) from place name
     def get_coordinates(self, location_name):
         try:
             geocode_result = self.gmaps.geocode(location_name)
@@ -25,6 +32,7 @@ class RideBackend:
             print(f"Geocode error: {e}")
         return None, None
 
+    # Calculate driving distance in kilometers
     def get_distance_km(self, origin, destination):
         try:
             result = self.gmaps.distance_matrix(origins=origin, destinations=destination, mode='driving')
@@ -35,6 +43,7 @@ class RideBackend:
             print(f"Distance error: {e}")
             return 0.0
 
+    # Generate static map URL with or without polyline
     def generate_static_map_url(self, pickup, dropoff, use_polyline=False):
         pickup_coords = self.get_coordinates(pickup)
         dropoff_coords = self.get_coordinates(dropoff)
@@ -71,3 +80,17 @@ class RideBackend:
         key_param = f"key={self.api_key}"
 
         return f"{base_url}{size_param}&{maptype_param}&{marker_params}&{path_param}&{key_param}"
+
+    # Generate random Booking ID (e.g., "8AF5T1XQ")
+    def generate_booking_id(self, length=8):
+        return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
+
+    # Get estimated driving duration (e.g., "12 mins")
+    def get_estimated_duration(self, origin, destination):
+        try:
+            result = self.gmaps.distance_matrix(origins=origin, destinations=destination, mode='driving')
+            duration_text = result['rows'][0]['elements'][0]['duration']['text']
+            return duration_text
+        except Exception as e:
+            print(f"Duration error: {e}")
+            return "--"
