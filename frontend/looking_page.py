@@ -147,6 +147,9 @@ class LookingPage(Frame):
 
         # Only load the static map (no booking or duration now)
         self.after(100, self.load_static_map)
+        
+        # Transition to RideArrivalPage after 10s
+        self.after(10000, self.open_ride_arrival_page)
 
     def create_back_button(self, container):
         canvas = Canvas(container, width=60, height=26, bg="#ffc4d6", highlightthickness=0, cursor="hand2")
@@ -184,3 +187,12 @@ class LookingPage(Frame):
             except Exception as e:
                 print(f"Map image error: {e}")
                 self.map_img_label.config(text="Map unavailable", fg="white", font=self.font_small)
+
+    def open_ride_arrival_page(self):
+        if hasattr(self.parent, "show_ride_arrival_page"):
+            self.parent.show_ride_arrival_page(
+                self.pickup_location,
+                self.dropoff_location,
+                self.selected_vehicle,
+                self.selected_price
+            )
