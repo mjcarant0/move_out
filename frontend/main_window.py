@@ -101,26 +101,27 @@ class MainWindow(Tk):
         self.account_page = AccountPage(self)
         self.account_page.pack(fill=BOTH, expand=True)
 
-    def show_looking_page(self, pickup, dropoff, vehicle, price, license_plate):
+    def show_looking_page(self, pickup, dropoff, vehicle, price, license_plate, driver_name, vehicle_name):
         # Hide current page
         self.clear_current_page()
 
         # Create and show the looking page
-        self.looking_page = LookingPage(self, pickup, dropoff, vehicle, price, license_plate)
+        self.looking_page = LookingPage(self, pickup, dropoff, vehicle, price, license_plate, driver_name, vehicle_name)
         self.looking_page.pack(fill=BOTH, expand=True)
 
-    def show_ride_arrival_page(self, pickup, dropoff, vehicle, price, license_plate):
+    def show_ride_arrival_page(self, pickup, dropoff, vehicle, price, license_plate, driver_name, vehicle_name):
         # Hide current page
         self.clear_current_page()
 
         # Create and show the looking page
-        self.ride_arrival_page = RideArrivalPage(self, pickup, dropoff, vehicle, price, license_plate)
+        
+        self.ride_arrival_page = RideArrivalPage(self, pickup, dropoff, vehicle, price, license_plate, driver_name, vehicle_name)
         self.ride_arrival_page.pack(fill="both", expand=True)
 
-    def show_booked_page(self, pickup, dropoff, vehicle, price, booking_id, estimated_duration, license_plate):
+    def show_booked_page(self, pickup, dropoff, vehicle, price, booking_id, estimated_duration, license_plate, driver_name, vehicle_name):
         # Hide current page
         self.clear_current_page()
 
         # Create and show the looking page
-        self.ride_arrival_page = BookedPage(self, pickup, dropoff, vehicle, price, booking_id, estimated_duration, license_plate)
+        self.ride_arrival_page = BookedPage(self, pickup, dropoff, vehicle, price, booking_id, estimated_duration, license_plate, driver_name, vehicle_name)
         self.ride_arrival_page.pack(fill="both", expand=True)
