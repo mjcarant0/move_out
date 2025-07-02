@@ -101,26 +101,26 @@ class MainWindow(Tk):
         self.account_page = AccountPage(self)
         self.account_page.pack(fill=BOTH, expand=True)
 
-    def show_looking_page(self, pickup, dropoff, vehicle, price):
+    def show_looking_page(self, pickup, dropoff, vehicle, price, license_plate):
         # Hide current page
         self.clear_current_page()
 
         # Create and show the looking page
-        self.looking_page = LookingPage(self, pickup, dropoff, vehicle, price)
+        self.looking_page = LookingPage(self, pickup, dropoff, vehicle, price, license_plate)
         self.looking_page.pack(fill=BOTH, expand=True)
 
-    def show_ride_arrival_page(self, pickup, dropoff, vehicle, price):
+    def show_ride_arrival_page(self, pickup, dropoff, vehicle, price, license_plate):
         # Hide current page
         self.clear_current_page()
 
         # Create and show the looking page
-        self.ride_arrival_page = RideArrivalPage(self, pickup, dropoff, vehicle, price)
+        self.ride_arrival_page = RideArrivalPage(self, pickup, dropoff, vehicle, price, license_plate)
         self.ride_arrival_page.pack(fill="both", expand=True)
 
-    def show_booked_page(self, pickup, dropoff, vehicle, price):
+    def show_booked_page(self, pickup, dropoff, vehicle, price, booking_id, estimated_duration, license_plate):
         # Hide current page
         self.clear_current_page()
 
         # Create and show the looking page
-        self.ride_arrival_page = BookedPage(self, pickup, dropoff, vehicle, price)
+        self.ride_arrival_page = BookedPage(self, pickup, dropoff, vehicle, price, booking_id, estimated_duration, license_plate)
         self.ride_arrival_page.pack(fill="both", expand=True)
