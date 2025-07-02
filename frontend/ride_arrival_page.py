@@ -10,11 +10,11 @@ from backend.ride_booking import RideBackend
 from urllib.request import urlopen
 from io import BytesIO
 
-class LookingPage(Frame):
+class RideArrivalPage(Frame):
     '''
-        This program provides the "looking for a ride" page for Move Out.
-        It allows the user to cancel and see their ride details and map
-        after confirming their ride selection.
+        This program provides the Ride Arrival page for Move Out.
+        It displays the ride details, map, and allows the user to cancel the ride.
+        It also shows the booking ID, estimated duration, and distance.
     '''
     def __init__(self, parent, pickup_location, dropoff_location, selected_vehicle, selected_price):
         super().__init__(parent)
@@ -26,6 +26,7 @@ class LookingPage(Frame):
         self.selected_vehicle = selected_vehicle
         self.selected_price = selected_price
 
+        # [Added] RideBackend instantiated to access backend methods like booking ID, distance, duration
         self.backend = RideBackend("AIzaSyAOKrot0gO67ji8DpUmxN3FdXRBfMsCvRQ")
 
         # Fonts
@@ -56,7 +57,7 @@ class LookingPage(Frame):
         self.options_frame.pack(pady=0)
         self.options_frame.pack_propagate(False)
 
-        # Ride Info Container (booking ID, duration, status)
+        # [Added] Ride Info Container to display booking ID, duration, and status message
         info_frame = Frame(self.options_frame, bg="#eeeeee", width=390, height=100)
         info_frame.pack()
         info_frame.pack_propagate(False)
@@ -69,7 +70,7 @@ class LookingPage(Frame):
         self.duration_label = Label(info_frame, text=".....", font=self.font_small, fg="black", bg="#eeeeee")
         self.duration_label.place(x=250, y=35)
 
-        Label(info_frame, text="Looking for a Ride...", font=self.font_small, fg="gray", bg="#eeeeee").place(x=30, y=65)
+        Label(info_frame, text="Rider is on the way...", font=self.font_small, fg="gray", bg="#eeeeee").place(x=30, y=65)
 
         # Location Display
         location_frame = Frame(self.options_frame, bg="white", width=390, height=110)
@@ -111,7 +112,7 @@ class LookingPage(Frame):
         self.distance_value = Label(distance_container, text="--", font=self.distance_font, fg="#8f8f8f", bg="white")
         self.distance_value.place(x=300)
 
-        # Vehicle Info
+        # [Changed] Shows selected vehicle as static info instead of interactive rows
         vehicle_frame = Frame(self.options_frame, bg="white", width=390, height=60)
         vehicle_frame.pack()
         vehicle_frame.pack_propagate(False)
@@ -139,17 +140,16 @@ class LookingPage(Frame):
         Label(vehicle_frame, text=self.selected_vehicle, font=self.selection_font, fg="#8f8f8f", bg="white").place(x=85, y=18)
         Label(vehicle_frame, text=self.selected_price, font=self.selection_font, fg="#8f8f8f", bg="white").place(x=285, y=18)
 
-        # Cancel Button
+        # [Replaced] CONFIRM button with CANCEL button to go back to HomePage
         cancel_con = Frame(self, bg="#ff8fab", width=390, height=50)
         cancel_con.place(y=734)
         cancel_con.pack_propagate(False)
         self.create_cancel_button(cancel_con).place(x=300, y=12)
 
-        # Only load the static map (no booking or duration now)
         self.after(100, self.load_static_map)
-        
-        # Transition to RideArrivalPage after 10s
-        self.after(10000, self.open_ride_arrival_page)
+
+        # [Added] Populate backend data like booking ID, estimated duration, and distance
+        self.after(300, self.populate_backend_info)
 
     def create_back_button(self, container):
         canvas = Canvas(container, width=60, height=26, bg="#ffc4d6", highlightthickness=0, cursor="hand2")
@@ -188,11 +188,12 @@ class LookingPage(Frame):
                 print(f"Map image error: {e}")
                 self.map_img_label.config(text="Map unavailable", fg="white", font=self.font_small)
 
-    def open_ride_arrival_page(self):
-        if hasattr(self.parent, "show_ride_arrival_page"):
-            self.parent.show_ride_arrival_page(
-                self.pickup_location,
-                self.dropoff_location,
-                self.selected_vehicle,
-                self.selected_price
-            )
+    # [Added] Calls backend methods to fill in booking ID, ride duration, and distance
+    def populate_backend_info(self):
+        booking_id = self.backend.generate_booking_id()
+        duration = self.backend.get_estimated_duration(self.pickup_location, self.dropoff_location)
+        distance = self.backend.get_distance_km(self.pickup_location, self.dropoff_location)
+
+        self.booking_id_label.config(text=booking_id)
+        self.duration_label.config(text=duration)
+        self.distance_value.config(text=f"{distance:.2f} km")
