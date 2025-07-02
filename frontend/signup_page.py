@@ -62,10 +62,10 @@ class SignUpPage(Frame):
 
         # PIN Entry
         self.pin_entry = Entry(white_box, font=self.phone_font, bd=1, relief=SOLID, fg="gray", width=35)
-        self.pin_entry.insert(0, "PIN")
+        self.pin_entry.insert(0, "PIN (4 digits only)")
         self.pin_entry.pack(pady=(0, 10), padx=20, fill=X, ipady=5)
-        self.pin_entry.bind("<FocusIn>", lambda e: self.clear_placeholder(self.pin_entry, "PIN"))
-        self.pin_entry.bind("<FocusOut>", lambda e: self.restore_placeholder(self.pin_entry, "PIN"))
+        self.pin_entry.bind("<FocusIn>", lambda e: self.clear_placeholder(self.pin_entry, "PIN (4 digits only)"))
+        self.pin_entry.bind("<FocusOut>", lambda e: self.restore_placeholder(self.pin_entry, "PIN (4 digits only)"))
 
         # Sign up button
         Button(white_box, text="SIGN UP", font=self.button_font, bg="#f38c9f", fg="white",
@@ -79,9 +79,23 @@ class SignUpPage(Frame):
         Label(white_box, text="Already have an Account?", font=self.create_font, fg="#ff99b8", bg="white").pack(pady=(0, 0))
 
         # Log in button
-        Button(white_box, text="LOGIN", font=self.button_font, bg="#f38c9f", fg="white",
-            activebackground="#ffc4d6", bd=0, cursor="hand2", command=self.on_login_clicked).place(x=70, y=425, width=160, height=25)
+        self.login_button = self.create_login_button()
+        self.login_button.place(relx=0.5, y=680, anchor="n")
 
+    def create_login_button(self):
+        canvas = Canvas(
+        self,
+        width=156,
+        height=26,
+        bg="white",
+        highlightthickness=0,
+        cursor="hand2"
+        )
+        canvas.create_rectangle(0, 0, 156, 26, outline="#f38c9f", width=2)
+        canvas.create_text(78, 13, text="SIGN UP", fill="#f38c9f", font=("League Spartan", 10, "bold"))
+        canvas.bind("<Button-1>", lambda e: self.on_login_clicked())
+        return canvas
+    
     def clear_placeholder(self, entry_widget, placeholder_text):
         if entry_widget.get() == placeholder_text:
             entry_widget.delete(0, END)
