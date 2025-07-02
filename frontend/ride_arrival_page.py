@@ -190,7 +190,7 @@ class RideArrivalPage(Frame):
         self.after(300, self.populate_backend_info)
 
         # Transition to BookedPage after 10s
-        self.after(10000, self.open_booked_page)
+        self.after_id = self.after(10000, self.open_booked_page)
 
     def create_back_button(self, container):
         canvas = Canvas(container, width=60, height=26, bg="#ffc4d6", highlightthickness=0, cursor="hand2")
@@ -205,13 +205,18 @@ class RideArrivalPage(Frame):
         canvas.create_text(40, 13, text="CANCEL", fill="#f38c9f", font=self.cancel_font)
         canvas.bind("<Button-1>", self.on_cancel_clicked)
         return canvas
+    
+    def cancel_transition(self):
+        if hasattr(self, 'after_id'):
+            self.after_cancel(self.after_id)
 
     def on_back_clicked(self, event):
+        self.cancel_transition()
         if hasattr(self.parent, "show_booking_page"):
             self.parent.show_booking_page(self.pickup_location, self.dropoff_location)
 
     def on_cancel_clicked(self, event):
-        # [Added] Goes back to HomePage on cancel
+        self.cancel_transition()
         if hasattr(self.parent, "show_home_page"):
             self.parent.show_home_page()
 
