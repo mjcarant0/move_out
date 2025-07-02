@@ -27,30 +27,49 @@ class LoginPage(Frame):
 
         # Phone input field
         phone_frame = Frame(white_box, bg="white")
-        phone_frame.pack(pady=(0, 10), padx=15, fill=X)
+        phone_frame.pack(pady=(0, 10), padx=10, fill=X)
 
-        # Country selector using label
+        # Country selector with larger box size (not thicker border)
         self.selected_country = StringVar()
+        country_border = Frame(phone_frame, bg="#BDBDBD")
+        country_border.pack(side=LEFT, padx=(0, 1))
+
+        # Set a fixed width in pixels (e.g., 80)
+        country_frame = Frame(country_border, bg="white", width=40, height=26)
+        country_frame.pack(padx=1, pady=1)
+        country_frame.pack_propagate(False)  # Prevent resizing to fit contents
+
         self.country_code_label = Label(
-            phone_frame,
+            country_frame,
             text="🇵🇭 +63",
             font=self.phone_font,
-            bg="white"
+            bg="white",
+            fg="black"
         )
-        self.country_code_label.pack(side=LEFT)
+        self.country_code_label.pack(expand=True)
 
 
         # PHONE NUMBER Entry
-        self.phone_entry = Entry(phone_frame, font=self.phone_font, bd=1, relief=SOLID, width=18, fg="gray")
+        phone_border = Frame(phone_frame, bg="#BDBDBD")
+        phone_border.pack(side=LEFT, fill=X, expand=True, padx=(8, 0))
+        phone_inner = Frame(phone_border, bg="white")
+        phone_inner.pack(fill=BOTH, padx=1, pady=1)
+
+        self.phone_entry = Entry(phone_inner, font=self.phone_font, bd=0, width=18, fg="gray", bg="white")
         self.phone_entry.insert(0, "Mobile Phone")
-        self.phone_entry.pack(side=LEFT, fill=X, expand=True, padx=(8, 0), ipady=5)
+        self.phone_entry.pack(fill=X, ipady=5)
         self.phone_entry.bind("<FocusIn>", lambda e: self.clear_placeholder(self.phone_entry, "Mobile Phone"))
         self.phone_entry.bind("<FocusOut>", lambda e: self.restore_placeholder(self.phone_entry, "Mobile Phone"))
 
         # PIN Entry
-        self.pin_entry = Entry(white_box, font=self.phone_font, bd=1, relief=SOLID, fg="gray", width=35)
+        pin_border = Frame(white_box, bg="#BDBDBD")
+        pin_border.pack(pady=(0, 10), padx=10, fill=X)
+        pin_inner = Frame(pin_border, bg="white")
+        pin_inner.pack(fill=BOTH, padx=1, pady=1)
+
+        self.pin_entry = Entry(pin_inner, font=self.phone_font, bd=0, fg="gray", bg="white")
         self.pin_entry.insert(0, "PIN (4 digits only)")
-        self.pin_entry.pack(pady=(0, 10), padx=20, fill=X, ipady=5)
+        self.pin_entry.pack(fill=X, ipady=5)
         self.pin_entry.bind("<FocusIn>", lambda e: self.clear_placeholder(self.pin_entry, "PIN (4 digits only)"))
         self.pin_entry.bind("<FocusOut>", lambda e: self.restore_placeholder(self.pin_entry, "PIN (4 digits only)"))
 
@@ -81,22 +100,22 @@ class LoginPage(Frame):
 
     def create_signup_button(self):
         canvas = Canvas(
-        self,
-        width=156,
-        height=26,
-        bg="white",
-        highlightthickness=0,
-        cursor="hand2"
+            self,
+            width=156,
+            height=26,
+            bg="white",
+            highlightthickness=0,
+            cursor="hand2"
         )
         canvas.create_rectangle(0, 0, 156, 26, outline="#f38c9f", width=2)
         canvas.create_text(78, 13, text="SIGN UP", fill="#f38c9f", font=("League Spartan", 10, "bold"))
         canvas.bind("<Button-1>", lambda e: self.on_signup_clicked())
         return canvas
 
-    def on_login_clicked(self): # When login button is clicked, navigate to the home page
+    def on_login_clicked(self):  # When login button is clicked, navigate to the home page
         if hasattr(self.parent, "show_home_page"):
             self.parent.show_home_page()
 
-    def on_signup_clicked(self): # When Signup button is clicked, navigate to the signup page
+    def on_signup_clicked(self):  # When Signup button is clicked, navigate to the signup page
         if hasattr(self.parent, "show_signup_page"):
             self.parent.show_signup_page()
