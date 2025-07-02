@@ -1,3 +1,10 @@
+'''
+Login Page UI for the MOVE OUT application using Tkinter.
+
+This module defines the LoginPage class, which provides the graphical interface for user login, 
+including mobile number, PIN entry, and navigation to signup.
+'''
+
 from tkinter import *
 from tkinter.font import Font
 from tkinter import ttk
@@ -29,7 +36,7 @@ class LoginPage(Frame):
         phone_frame = Frame(white_box, bg="white")
         phone_frame.pack(pady=(0, 10), padx=10, fill=X)
 
-        # Country selector with larger box size (not thicker border)
+        # Country selector with larger box size
         self.selected_country = StringVar()
         country_border = Frame(phone_frame, bg="#BDBDBD")
         country_border.pack(side=LEFT, padx=(0, 1))
@@ -47,7 +54,6 @@ class LoginPage(Frame):
             fg="black"
         )
         self.country_code_label.pack(expand=True)
-
 
         # PHONE NUMBER Entry
         phone_border = Frame(phone_frame, bg="#BDBDBD")
