@@ -24,6 +24,8 @@ class BookingPage(Frame):
         self.pickup_location = pickup_location
         self.dropoff_location = dropoff_location
 
+        self.backend = RideBackend("AIzaSyAOKrot0gO67ji8DpUmxN3FdXRBfMsCvRQ")
+
         # Fonts
         self.location_font = Font.Font(family="Montserrat", size=11, weight="bold")
         self.distance_font = Font.Font(family="Montserrat", size=10, weight="bold")
@@ -78,8 +80,8 @@ class BookingPage(Frame):
 
         label_column = Frame(info_row, bg="white")
         label_column.pack(side="left", anchor="n", padx=10)
-        Label(label_column, text="Pickup", font=self.location_font, fg="#8f8f8f", bg="white", anchor="w").pack(anchor="w")
-        Label(label_column, text="Drop-off", font=self.location_font, fg="#8f8f8f", bg="white", anchor="w").pack(anchor="w", pady=(22, 0))
+        Label(label_column, text=self.pickup_location, font=self.location_font, fg="#8f8f8f", bg="white", anchor="w").pack(anchor="w")
+        Label(label_column, text=self.dropoff_location, font=self.location_font, fg="#8f8f8f", bg="white", anchor="w").pack(anchor="w", pady=(22, 0))
 
         # Distance Info Container
         distance_container = Frame(self.options_frame, bg="white", width=350, height=20)
@@ -142,7 +144,6 @@ class BookingPage(Frame):
             self.vehicle_widgets = {}
         self.vehicle_widgets[label] = (label_text, price)
 
-    # Selecting a Vehicle
     def select_vehicle(self, vehicle_name):
         self.selected_vehicle = vehicle_name
         for label_text, price_label in self.vehicle_widgets.values():
@@ -174,26 +175,24 @@ class BookingPage(Frame):
         if hasattr(self, 'selected_vehicle'):
             vehicle = self.selected_vehicle
             price = self.price_value.cget("text")
-            if hasattr(self.parent, "show_looking_page"):
-                self.parent.show_looking_page(self.pickup_location, self.dropoff_location, vehicle, price)
+            driver_info = self.backend.get_driver_info(vehicle)
+            if hasattr(self.parent, "show_looking_page") and driver_info:
+                license_plate = driver_info.get("license_plate", "")
+                driver_name = driver_info.get("driver_name", "")
+                vehicle_name = driver_info.get("vehicle_name", "")
+                self.parent.show_looking_page(self.pickup_location, self.dropoff_location, vehicle, price, license_plate, driver_name, vehicle_name)
         else:
             self.show_vehicle_warning()
 
     def show_vehicle_warning(self):
-        # If already exists, just raise it
         if hasattr(self, 'warning_label') and self.warning_label.winfo_exists():
             self.warning_label.lift()
         else:
-            self.warning_label = Label(self.options_frame, text="Please select a vehicle before confirming.",
-                                    font=self.selection_font, fg="red", bg="white")
+            self.warning_label = Label(self.options_frame, text="Please select a vehicle before confirming.", font=self.selection_font, fg="red", bg="white")
             self.warning_label.pack(pady=(5, 0))
 
-    # Load Static Map Image using Google Maps API
     def load_static_map(self):
-        backend = RideBackend("AIzaSyAOKrot0gO67ji8DpUmxN3FdXRBfMsCvRQ")
-
-        # Load Static Map
-        map_url = backend.generate_static_map_url(self.pickup_location, self.dropoff_location, use_polyline=True)
+        map_url = self.backend.generate_static_map_url(self.pickup_location, self.dropoff_location, use_polyline=True)
         if map_url:
             try:
                 with urlopen(map_url) as response:
@@ -207,9 +206,8 @@ class BookingPage(Frame):
         else:
             self.map_img_label.config(text="Map not available", fg="white", font=self.distance_font)
 
-        # Load and Display Distance
         try:
-            distance = backend.get_distance_km(self.pickup_location, self.dropoff_location)
+            distance = self.backend.get_distance_km(self.pickup_location, self.dropoff_location)
             self.distance_value.config(text=f"{distance:.2f} km")
             self.distance_value.place(x=290)
         except Exception as e:
