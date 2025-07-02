@@ -69,7 +69,7 @@ class RideArrivalPage(Frame):
 
         Label(info_frame, text="Estimated Ride Duration", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee").place(x=25, y=35)
         self.duration_label = Label(info_frame, text=".....", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee")
-        self.duration_label.place(x=310, y=35)
+        self.duration_label.place(x=315, y=35)
 
         Label(info_frame, text="Rider is on the way...", font=self.loading_font, fg="#8f8f8f", bg="#eeeeee").place(anchor="center", x=195, y=72)
 
@@ -168,6 +168,9 @@ class RideArrivalPage(Frame):
         # [Added] Populate backend data like booking ID, estimated duration, and distance
         self.after(300, self.populate_backend_info)
 
+        # Transition to BookedPage after 10s
+        self.after(10000, self.open_booked_page)
+
     def create_back_button(self, container):
         canvas = Canvas(container, width=60, height=26, bg="#ffc4d6", highlightthickness=0, cursor="hand2")
         canvas.create_rectangle(0, 0, 60, 26, fill="#f38c9f", outline="#f38c9f", width=2)
@@ -214,3 +217,12 @@ class RideArrivalPage(Frame):
         self.booking_id_label.config(text=booking_id)
         self.duration_label.config(text=duration)
         self.distance_value.config(text=f"{distance:.2f} km")
+
+    def open_booked_page(self):
+        if hasattr(self.parent, "show_booked_page"):
+            self.parent.show_booked_page(
+                self.pickup_location,
+                self.dropoff_location,
+                self.selected_vehicle,
+                self.selected_price
+            )
