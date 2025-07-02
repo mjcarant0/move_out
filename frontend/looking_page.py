@@ -65,13 +65,21 @@ class LookingPage(Frame):
         info_frame.pack()
         info_frame.pack_propagate(False)
 
-        Label(info_frame, text="Booking ID", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee").place(x=25, y=10)
-        self.booking_id_label = Label(info_frame, text=".....", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee")
-        self.booking_id_label.place(x=340, y=10)
+        # Booking ID row
+        booking_row = Frame(info_frame, bg="#eeeeee")
+        booking_row.pack(fill=X, padx=25, pady=(10, 0))
 
-        Label(info_frame, text="Estimated Ride Duration", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee").place(x=25, y=35)
-        self.duration_label = Label(info_frame, text=".....", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee")
-        self.duration_label.place(x=340, y=35)
+        Label(booking_row, text="Booking ID", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee").pack(side=LEFT)
+        self.booking_id_label = Label(booking_row, text=".....", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee")
+        self.booking_id_label.pack(side=RIGHT)
+
+        # Duration row
+        duration_row = Frame(info_frame, bg="#eeeeee")
+        duration_row.pack(fill=X, padx=25, pady=(5, 0))
+
+        Label(duration_row, text="Estimated Ride Duration", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee").pack(side=LEFT)
+        self.duration_label = Label(duration_row, text=".....", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee")
+        self.duration_label.pack(side=RIGHT)
 
         Label(info_frame, text="Looking for a Ride...", font=self.loading_font, fg="#8f8f8f", bg="#eeeeee").place(anchor="center", x=195, y=72)
 
@@ -85,13 +93,13 @@ class LookingPage(Frame):
         profile_canvas.create_oval(2, 2, 38, 38, fill="#d9d9d9", outline="#d9d9d9")
         profile_canvas.place(x=25, y=10)
 
-        Label(driver_info_frame, text=self.driver_name, font=self.selection_font, fg="#8f8f8f", bg="white").place(x=80, y=20)
+        Label(driver_info_frame, text="---", font=self.selection_font, fg="#8f8f8f", bg="white").place(x=80, y=20)
 
         vehicle_label_frame = Frame(driver_info_frame, bg="white")
-        vehicle_label_frame.place(x=300, y=10)
+        vehicle_label_frame.pack(side="right", padx=(0, 20), pady=10, anchor="e")
 
-        Label(vehicle_label_frame, text=self.vehicle_name, font=self.selection_font, fg="#8f8f8f", bg="white", anchor="e").pack(anchor="e")
-        Label(vehicle_label_frame, text=self.license_plate, font=self.selection_font, fg="#8f8f8f", bg="white", anchor="e").pack(anchor="e")
+        Label(vehicle_label_frame, text="--", font=self.selection_font, fg="#8f8f8f", bg="white", anchor="e", justify="right").pack(anchor="e")
+        Label(vehicle_label_frame, text="--", font=self.selection_font, fg="#8f8f8f", bg="white", anchor="e", justify="right").pack(anchor="e")
 
         # Location Display
         location_frame = Frame(self.options_frame, bg="white", width=390, height=85)
