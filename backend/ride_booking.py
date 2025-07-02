@@ -11,6 +11,25 @@ class RideBackend:
         self.api_key = api_key
         self.gmaps = googlemaps.Client(key=api_key)
 
+        # Fixed driver and vehicle info
+        self.driver_data = {
+            "Motorcycle": {
+                "driver_name": "Princess Marian",
+                "vehicle_name": "Suzuki XR",
+                "license_plate": "ABC-123"
+            },
+            "4-seater": {
+                "driver_name": "Mary Baruruth",
+                "vehicle_name": "Honda Civic",
+                "license_plate": "XYZ-456"
+            },
+            "6-seater": {
+                "driver_name": "Maryjoy Caranters",
+                "vehicle_name": "Toyota 2022",
+                "license_plate": "DEF-789"
+            }
+        }
+
     # Autocomplete place suggestions
     def autocomplete_place(self, input_text):
         try:
@@ -94,3 +113,11 @@ class RideBackend:
         except Exception as e:
             print(f"Duration error: {e}")
             return "--"
+
+    # Get driver and vehicle info by type
+    def get_driver_info(self, vehicle_type):
+        return self.driver_data.get(vehicle_type, {
+            "driver_name": "--",
+            "vehicle_name": "--",
+            "license_plate": "--"
+        })
