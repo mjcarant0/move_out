@@ -16,7 +16,7 @@ class LookingPage(Frame):
         It allows the user to cancel and see their ride details and map
         after confirming their ride selection.
     '''
-    def __init__(self, parent, pickup_location, dropoff_location, selected_vehicle, selected_price):
+    def __init__(self, parent, pickup_location, dropoff_location, selected_vehicle, selected_price, license_plate, driver_name, vehicle_name):
         super().__init__(parent)
         self.parent = parent
         self.configure(bg="white")
@@ -25,6 +25,9 @@ class LookingPage(Frame):
         self.dropoff_location = dropoff_location    
         self.selected_vehicle = selected_vehicle
         self.selected_price = selected_price
+        self.license_plate = license_plate
+        self.driver_name = driver_name
+        self.vehicle_name = vehicle_name
 
         self.backend = RideBackend("AIzaSyAOKrot0gO67ji8DpUmxN3FdXRBfMsCvRQ")
 
@@ -57,7 +60,7 @@ class LookingPage(Frame):
         self.options_frame.pack(pady=0)
         self.options_frame.pack_propagate(False)
 
-        # Ride Info Container (booking ID, duration, status)
+        # Ride Info Container
         info_frame = Frame(self.options_frame, bg="#eeeeee", width=390, height=100)
         info_frame.pack()
         info_frame.pack_propagate(False)
@@ -72,7 +75,7 @@ class LookingPage(Frame):
 
         Label(info_frame, text="Looking for a Ride...", font=self.loading_font, fg="#8f8f8f", bg="#eeeeee").place(anchor="center", x=195, y=72)
 
-        # Placeholder Driver Info Frame
+        # Driver Info Frame
         driver_info_frame = Frame(self.options_frame, bg="white", width=390, height=60)
         driver_info_frame.pack(pady=(8, 10))
         driver_info_frame.pack_propagate(False)
@@ -82,11 +85,13 @@ class LookingPage(Frame):
         profile_canvas.create_oval(2, 2, 38, 38, fill="#d9d9d9", outline="#d9d9d9")
         profile_canvas.place(x=25, y=10)
 
-        # Driver Name Placeholder
-        Label(driver_info_frame, text="--", font=self.selection_font, fg="#8f8f8f", bg="white").place(x=80, y=20)
+        Label(driver_info_frame, text=self.driver_name, font=self.selection_font, fg="#8f8f8f", bg="white").place(x=80, y=20)
 
-        # Vehicle Placeholder
-        Label(driver_info_frame, text="--", font=self.selection_font, fg="#8f8f8f", bg="white").place(x=350, y=20)
+        vehicle_label_frame = Frame(driver_info_frame, bg="white")
+        vehicle_label_frame.place(x=300, y=10)
+
+        Label(vehicle_label_frame, text=self.vehicle_name, font=self.selection_font, fg="#8f8f8f", bg="white", anchor="e").pack(anchor="e")
+        Label(vehicle_label_frame, text=self.license_plate, font=self.selection_font, fg="#8f8f8f", bg="white", anchor="e").pack(anchor="e")
 
         # Location Display
         location_frame = Frame(self.options_frame, bg="white", width=390, height=85)
@@ -118,12 +123,12 @@ class LookingPage(Frame):
 
         label_column = Frame(info_row, bg="white")
         label_column.pack(side="left", anchor="n", padx=10)
-        Label(label_column, text="Pickup", font=self.location_font, fg="#8f8f8f", bg="white", anchor="w").pack(anchor="w")
-        Label(label_column, text="Drop-off", font=self.location_font, fg="#8f8f8f", bg="white", anchor="w").pack(anchor="w", pady=(22, 0))
+        Label(label_column, text=self.pickup_location, font=self.location_font, fg="#8f8f8f", bg="white", anchor="w").pack(anchor="w")
+        Label(label_column, text=self.dropoff_location, font=self.location_font, fg="#8f8f8f", bg="white", anchor="w").pack(anchor="w", pady=(22, 0))
 
         # Distance Info Container
         distance_container = Frame(location_frame, bg="white", width=350, height=20)
-        distance_container.pack()
+        distance_container.pack(pady=(5, 0))
         Label(distance_container, text="Distance", font=self.distance_font, fg="#8f8f8f", bg="white").place(x=5)
         self.distance_value = Label(distance_container, text="--", font=self.distance_font, fg="#8f8f8f", bg="white")
         self.distance_value.place(x=330)
@@ -183,7 +188,6 @@ class LookingPage(Frame):
         return canvas
 
     def on_back_clicked(self, event):
-        # [Changed] Goes back to BookingPage instead of HomePage
         if hasattr(self.parent, "show_booking_page"):
             self.parent.show_booking_page(self.pickup_location, self.dropoff_location)
 
@@ -205,11 +209,22 @@ class LookingPage(Frame):
                 print(f"Map image error: {e}")
                 self.map_img_label.config(text="Map unavailable", fg="white", font=self.booking_info_font)
 
+        try:
+            distance = self.backend.get_distance_km(self.pickup_location, self.dropoff_location)
+            self.distance_value.config(text=f"{distance:.2f} km")
+            self.distance_value.place(x=290)
+        except Exception as e:
+            print(f"Distance fetch error: {e}")
+            self.distance_value.config(text="--")
+
     def open_ride_arrival_page(self):
         if hasattr(self.parent, "show_ride_arrival_page"):
             self.parent.show_ride_arrival_page(
                 self.pickup_location,
                 self.dropoff_location,
                 self.selected_vehicle,
-                self.selected_price
+                self.selected_price,
+                self.license_plate,
+                self.driver_name,
+                self.vehicle_name
             )
