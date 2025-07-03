@@ -4,16 +4,15 @@ to the SQLite database, initializing user tables, handling signup, login, and ac
 """
 
 import os
-import sqlite3  # Enables creating and interacting with the local user database.
-from typing import Any  # Used for type hints when return types may vary
+import sqlite3
+from typing import Any
 
 class DatabaseManager:
-    # Provides methods for interacting with the user database, such as creating tables, 
-    # inserting users, validating credentials, and updating account information.
+    # Provides methods for interacting with the user database.
 
     def __init__(self, db_name: str = None):
         # Set path to /move_out/data/user_information.db
-        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # move_out/
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         data_dir = os.path.join(base_dir, "data")
         os.makedirs(data_dir, exist_ok=True)
 
@@ -21,11 +20,12 @@ class DatabaseManager:
         self._initialize_database()
     
     def _initialize_database(self) -> None:
-        """Initialize the database and create the users table if it doesn't exist."""
+        """Initialize the database and create necessary tables."""
         try:
-            with sqlite3.connect(self.db_name) as conn:  # Connect to the database (creates the file if it doesn't exist)
+            with sqlite3.connect(self.db_name) as conn:
+                cursor = conn.cursor()
 
-                cursor = conn.cursor()  # Used to execute SQL commands
+                # Users table
                 cursor.execute('''
                     CREATE TABLE IF NOT EXISTS users (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,7 +35,9 @@ class DatabaseManager:
                         phone_number TEXT NOT NULL UNIQUE,
                         pin TEXT NOT NULL
                     )
-                ''')   # If the table already exists, this won’t recreate it
+                ''')
+
+                # Pending bookings
                 cursor.execute('''
                     CREATE TABLE IF NOT EXISTS pending_bookings (
                         booking_id TEXT PRIMARY KEY,
@@ -52,34 +54,29 @@ class DatabaseManager:
                     )
                 ''')
 
-                # CANCELLED BOOKINGS TABLE (same structure, empty)
+                # Cancelled and completed (same structure, initially empty)
                 cursor.execute('''
                     CREATE TABLE IF NOT EXISTS cancelled_bookings AS SELECT * FROM pending_bookings WHERE 0
                 ''')
-
-                # COMPLETED BOOKINGS TABLE (same structure, empty)
                 cursor.execute('''
                     CREATE TABLE IF NOT EXISTS completed_bookings AS SELECT * FROM pending_bookings WHERE 0
                 ''')
-                conn.commit()  # Saves changes to the database
-                    # If something goes wrong with SQLite (like a bad connection), raise a clearer error
-       
-        # If an issue with sqlite occurs, display an error message.
+
+                conn.commit()
         except sqlite3.Error as e:
             raise Exception(f"Database initialization failed: {str(e)}")
     
     def get_connection(self):
-        """Get a database connection."""
+        """Get a new database connection."""
         return sqlite3.connect(self.db_name)
     
     def execute_query(self, query: str, params: tuple = ()) -> Any:
-        """Execute a query and returns whatever results the query finds"""
+        """Execute a query and return all results."""
         try:
             with self.get_connection() as conn:
                 cursor = conn.cursor()
-                cursor.execute(query, params) # Runs the SQL query with provided parameters
-                return cursor.fetchall()      # Returns the results as a list of rows
-        # If an issue with sqlite occurs, display an error message.
+                cursor.execute(query, params)
+                return cursor.fetchall()
         except sqlite3.Error as e:
             raise Exception(f"Query execution failed: {str(e)}")
     
@@ -88,10 +85,9 @@ class DatabaseManager:
         try:
             with self.get_connection() as conn:
                 cursor = conn.cursor()
-                cursor.execute(query, params)  # Runs the SQL query with provided parameters
-                conn.commit()                  # Saves the change
-                return cursor.rowcount         # Returns number of rows affected
-        # If an issue with sqlite occurs, display an error message.
+                cursor.execute(query, params)
+                conn.commit()
+                return cursor.rowcount
         except sqlite3.Error as e:
             raise Exception(f"Update execution failed: {str(e)}")
     
@@ -102,8 +98,34 @@ class DatabaseManager:
                 cursor = conn.cursor()
                 cursor.execute(query, params)
                 conn.commit()
-                return cursor.lastrowid   # Returns the auto-generated ID of the new row    
-        # If an issue with sqlite occurs, display an error message.
+                return cursor.lastrowid
         except sqlite3.Error as e:
             raise Exception(f"Insert execution failed: {str(e)}")
+        
+    def add_pending_booking(self, booking: tuple) -> None:
+        """
+        Add a pending booking (11 fields).
+        Format: (booking_id, user_phone, vehicle_id, vehicle_type, driver_name,
+                 license_plate, distance, fare, pickup, dropoff, timestamp)
+        """
+        self.execute_update(
+            "INSERT INTO pending_bookings VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            booking,
+        )
 
+    def get_bookings(self, table: str, user_phone: str) -> list[sqlite3.Row]:
+        """Get all bookings for one user from a specific table."""
+        assert table in (
+            "pending_bookings",
+            "completed_bookings",
+            "cancelled_bookings",
+        ), "Invalid table name"
+        return self.execute_query(
+            f"SELECT * FROM {table} WHERE user_phone = ?", (user_phone,)
+        )
+
+    def delete_booking(self, table: str, booking_id: str) -> None:
+        """Delete a booking by ID from the specified table."""
+        self.execute_update(
+            f"DELETE FROM {table} WHERE booking_id = ?", (booking_id,)
+        )

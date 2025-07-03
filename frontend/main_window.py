@@ -15,6 +15,7 @@ from .ride_arrival_page import RideArrivalPage
 from .booked_page import BookedPage
 from .help_center_page import HelpCenterPage
 from .ride_status_page import RideStatusPage
+from backend.database_manager import DatabaseManager
 
 class MainWindow(Tk):
     '''
@@ -26,7 +27,8 @@ class MainWindow(Tk):
         
         self.current_user_phone = None
         self.backend = RideBackend(api_key="AIzaSyAOKrot0gO67ji8DpUmxN3FdXRBfMsCvRQ")
-        self.ride_status_page = RideStatusPage(self)
+        self.db = DatabaseManager()
+        self.ride_status_page = RideStatusPage(self, self.db)
 
         os.chdir(os.path.dirname(os.path.abspath(__file__)))
 

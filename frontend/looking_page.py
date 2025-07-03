@@ -207,12 +207,7 @@ class LookingPage(Frame):
         self.cancel_transition()
 
         if hasattr(self.parent, "ride_status_page"):
-            self.parent.ride_status_page.add_canceled_ride(
-                self.pickup_location,
-                self.dropoff_location,
-                self.selected_vehicle,
-                self.selected_price
-            )
+            self.parent.ride_status_page.add_canceled_ride()  # call now matches RideStatusPage method
             self.parent.ride_status_page.show_canceled()
 
         if hasattr(self.parent, "show_home_page"):
