@@ -60,14 +60,13 @@ class AccountPage(Frame):
         # Confirm PIN
         self.cpin_entry = Entry(self, font=self.input_font, bd=1, relief=SOLID, fg="gray", width=35, state=DISABLED, show="*")
         self.cpin_entry.insert(0, "****")
-        self.cpin_entry.place(x=70, y=620, width=250, height=35)
         self.cpin_entry.bind("<FocusIn>", lambda e: self.clear_placeholder(self.cpin_entry, "Confirm PIN (4 digits only)"))
         self.cpin_entry.bind("<FocusOut>", lambda e: self.restore_placeholder(self.cpin_entry, "Confirm PIN (4 digits only)"))
 
 
         # Edit & Save Buttons (Toggle Visibility)
         self.edit_label = Label(self, text="✎ Edit", font=("Arial", 8), bg="white", fg="black", cursor="hand2")
-        self.edit_label.place(x=310, y=660)
+        self.edit_label.place(x=277, y=620)
         self.edit_label.bind("<Button-1>", self.enable_editing)
 
         self.save_label = Label(self, text="💾 Save", font=("Arial", 8), bg="white", fg="black", cursor="hand2")
@@ -98,7 +97,7 @@ class AccountPage(Frame):
         self.cpin_entry.config(state=NORMAL, show="")
         self.cpin_entry.place(x=70, y=620, width=250, height=35)    
         self.edit_label.place_forget()
-        self.save_label.place(x=310, y=660)
+        self.save_label.place(x=277, y=660)
 
     def save_info(self, event=None):
         self.first_name_entry.config(state=DISABLED)
@@ -109,7 +108,7 @@ class AccountPage(Frame):
         self.cpin_entry.place_forget()  # hide the Confirm PIN field
         self.save_label.place_forget()
         self.save_label.place_forget()
-        self.edit_label.place(x=310, y=660)
+        self.edit_label.place(x=277, y=620)
 
     def clear_placeholder(self, entry_widget, placeholder_text):
         if entry_widget.get() == placeholder_text:
