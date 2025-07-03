@@ -200,14 +200,14 @@ class BookedPage(Frame):
         if hasattr(self.parent, "ride_status_page"):
             ride_status = self.parent.ride_status_page
 
-            if not ride_status.ride_active:
-                ride_status.set_ride_details(
-                    self.pickup_location,
-                    self.dropoff_location,
-                    self.selected_vehicle,
-                    self.selected_price,
-                    self.duration_label.cget("text")
-                )
+            # ✅ Just restore ride info visually, don't set as active
+            ride_status.restore_ride_info(
+                self.pickup_location,
+                self.dropoff_location,
+                self.selected_vehicle,
+                self.selected_price,
+                self.duration_label.cget("text")
+            )
 
         if hasattr(self.parent, "show_home_page"):
             self.parent.show_home_page()
