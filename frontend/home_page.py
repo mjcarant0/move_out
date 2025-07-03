@@ -47,7 +47,7 @@ class HomePage(Frame):
         Button(nav_bar, text="🏠", font=("Arial", 20), bg="#ffc4d6", bd=0,
                activebackground="#ffc4d6", cursor="hand2", command=self.go_home).place(x=40, y=5)
         Button(nav_bar, text="📄", font=("Arial", 20), bg="#ffc4d6", bd=0,
-               activebackground="#ffc4d6", cursor="hand2", command=self.go_documents).place(x=175, y=5)
+               activebackground="#ffc4d6", cursor="hand2", command=self.go_ride_status).place(x=175, y=5)
         Button(nav_bar, text="👤", font=("Arial", 20), bg="#ffc4d6", bd=0,
                activebackground="#ffc4d6", cursor="hand2", command=self.go_profile).place(x=320, y=5)
 
@@ -139,7 +139,7 @@ class HomePage(Frame):
         if hasattr(self.parent, "show_home_page"):
             self.parent.show_home_page()
 
-    def go_documents(self):
+    def go_ride_status(self):
         if hasattr(self.parent, "show_ride_status_page"):
             self.parent.show_ride_status_page()
 
