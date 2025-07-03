@@ -4,8 +4,8 @@ It validates user input using the InputValidator and interacts with the database
 via the DatabaseManager to store user account information securely.
 """
 
-from database_manager import DatabaseManager  # Handles all interactions with the database
-from validators import InputValidator         # Used to validate and format all user input
+from backend.database_manager import DatabaseManager  # Handles all interactions with the database
+from backend.validators import InputValidator         # Used to validate and format all user input
 from typing import Dict, Any                  # For precise type hints in return values and args
 
 class SignupHandler:
