@@ -317,32 +317,37 @@ class AccountPage(Frame):
         formatted_new_phone = InputValidator.format_phone_number(phone)
         formatted_old_phone = InputValidator.format_phone_number(self.current_user_phone)
 
-        # Check for duplicate phone if changed
         from backend.database_manager import DatabaseManager
         db = DatabaseManager()
-        conn = db.get_connection()
-        cursor = conn.cursor()
 
-        if formatted_new_phone != formatted_old_phone:
-            cursor.execute("SELECT * FROM users WHERE phone_number = ?", (formatted_new_phone,))
-            if cursor.fetchone():
-                self.phone_error.config(text="This phone number is already registered.")
-                self.phone_error.place(x=70, y=545)
-                conn.close()
-                return
+        try:
+            with db.get_connection() as conn:
+                cursor = conn.cursor()
 
-        # Perform update in DB
-        cursor.execute("""
-            UPDATE users 
-            SET first_name = ?, last_name = ?, phone_number = ?, pin = ?
-            WHERE phone_number = ?
-        """, (first, last, formatted_new_phone, pin, formatted_old_phone))
+                # Check for duplicate phone if changed
+                if formatted_new_phone != formatted_old_phone:
+                    cursor.execute("SELECT * FROM users WHERE phone_number = ?", (formatted_new_phone,))
+                    if cursor.fetchone():
+                        self.phone_error.config(text="This phone number is already registered.")
+                        self.phone_error.place(x=70, y=545)
+                        return  # Exit early if phone already exists
 
-        conn.commit()
-        conn.close()
+                # Perform update in DB
+                cursor.execute("""
+                    UPDATE users 
+                    SET first_name = ?, last_name = ?, phone_number = ?, pin = ?
+                    WHERE phone_number = ?
+                """, (first, last, formatted_new_phone, pin, formatted_old_phone))
 
-        # Update current_user_phone immediately
-        self.current_user_phone = phone
+                conn.commit()
+
+        except Exception as e:
+            print(f"Error saving account info: {e}")
+            return  # Exit to prevent further issues if DB failed
+
+        # Update current user phone (both self and parent)
+        self.current_user_phone = formatted_new_phone
+        self.parent.current_user_phone = formatted_new_phone
 
         # Lock entries again
         self.first_name_entry.config(state=DISABLED)
@@ -353,6 +358,9 @@ class AccountPage(Frame):
         self.cpin_entry.place_forget()
         self.save_label.place_forget()
         self.edit_label.place(x=277, y=620)
+
+        # Refresh the UI with updated data
+        self.load_user_info()
 
     # Placeholder Helpers
     def clear_placeholder(self, entry_widget, placeholder_text):
