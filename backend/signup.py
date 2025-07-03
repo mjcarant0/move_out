@@ -20,7 +20,7 @@ class SignupHandler:
 
     
     def create_user(self, first_name: str, last_name: str, country_code: str, 
-                   phone_number: str, pin: str) -> Dict[str, Any]:
+                   phone_number: str, pin: str, confirm_pin: str) -> Dict[str, Any]:  
         """
         Handle user sign-up.
         
@@ -30,6 +30,7 @@ class SignupHandler:
             country_code: Country code (e.g., '+63', '+65')
             phone_number: Phone number
             pin: 4-digit PIN
+            confirm pin: must match PIN
             
         Returns:
             Dict with 'success' (bool) and 'message' (str) keys
@@ -50,6 +51,13 @@ class SignupHandler:
             
             if not self.validator.validate_pin(pin):
                 return {"success": False, "message": "PIN must be exactly 4 digits."}
+            
+            if not self.validator.validate_pin(confirm_pin):
+                return {"success": False, "message": "Confirm PIN must be exactly 4 digits."}
+
+            if not self.validator.validate_pin_confirmation(pin, confirm_pin):
+                return {"success": False, "message": "PIN and Confirm PIN do not match."}
+
             
             # Clean and format inputs
             first_name = self.validator.format_name(first_name)
