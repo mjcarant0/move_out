@@ -169,14 +169,3 @@ class SignUpPage(Frame):
     def on_login_clicked(self):  # When Login button is clicked, navigate to the Login page
         if hasattr(self.parent, "show_login_page"):
             self.parent.show_login_page()
-
-if __name__ == "__main__":
-    root = Tk()
-    root.title("sample")
-    root.geometry("390x844")
-    root.resizable(False, False)
-
-    signup_page = SignUpPage(root)
-    signup_page.pack(fill=BOTH, expand=True)
-
-    root.mainloop()
