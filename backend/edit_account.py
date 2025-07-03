@@ -100,9 +100,9 @@ class EditAccountHandler:
         except Exception as e:
             return {"success": False, "message": f"Error updating account: {str(e)}"}
     
-    def change_pin(self, phone_number: str, old_pin: str, new_pin: str) -> Dict[str, Any]:
+    def change_pin(self, phone_number: str, old_pin: str, new_pin: str, confirm_new_pin: str) -> Dict[str, Any]:
         """
-        Update user's PIN after verifying the current one.
+        Change user's PIN with confirmation.
         """
         try:
             # Validate both old and new PINs
@@ -111,6 +111,12 @@ class EditAccountHandler:
             
             if not self.validator.validate_pin(new_pin):
                 return {"success": False, "message": "New PIN must be exactly 4 digits."}
+            
+            if not self.validator.validate_pin(confirm_new_pin):
+                return {"success": False, "message": "Confirm new PIN must be exactly 4 digits."}
+
+            if not self.validator.validate_pin_confirmation(new_pin, confirm_new_pin):
+                return {"success": False, "message": "New PIN and Confirm PIN do not match."}
             
             # Retrieve user and their stored PIN
             user_data = self.db_manager.execute_query(
