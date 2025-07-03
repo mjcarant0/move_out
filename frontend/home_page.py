@@ -1,8 +1,6 @@
 from tkinter import *
 import tkinter.font as Font
 
-from .ride_status_pending import RideStatus
-
 class HomePage(Frame):
     '''
         This program provides the home page for Move Out.
