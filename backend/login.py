@@ -25,14 +25,18 @@ class LoginHandler:
         """
         try:
             # Clean and format inputs
-            country_code = "+63" 
             phone_number = self.validator.clean_phone_number(phone_number)
-            
+
+            # Remove leading 0 if present and number is 11 digits
+            if phone_number.startswith("0") and len(phone_number) == 11:
+                phone_number = phone_number[1:]
+
             # Validate phone number format
             if not self.validator.validate_phone_number(phone_number):
                 return {"success": False, "message": "Invalid phone number format."}
             
             # Combine country code and phone number (for matching in database)
+            country_code = "+63" 
             full_phone_number = country_code + phone_number
             
             # Check if user with that phone number exists
