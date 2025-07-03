@@ -153,6 +153,7 @@ class LoginPage(Frame):
         result = self.login_handler.authenticate_user(phone_number, pin)
 
         if result["success"]:
+            self.parent.current_user_phone = phone_number
             if hasattr(self.parent, "show_home_page"):
                 self.parent.show_home_page()
         else:
