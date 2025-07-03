@@ -71,7 +71,7 @@ class AccountPage(Frame):
         Button(nav_bar, text="🏠", font=("Arial", 20), bg="#ffc4d6", bd=0,
                activebackground="#ffc4d6", cursor="hand2", command=self.go_home).place(x=40, y=5)
         Button(nav_bar, text="📄", font=("Arial", 20), bg="#ffc4d6", bd=0,
-               activebackground="#ffc4d6", cursor="hand2", command=self.go_documents).place(x=175, y=5)
+               activebackground="#ffc4d6", cursor="hand2", command=self.go_ride_status).place(x=175, y=5)
         Button(nav_bar, text="👤", font=("Arial", 20), bg="#ffc4d6", bd=0,
                activebackground="#ffc4d6", cursor="hand2", command=self.go_profile).place(x=320, y=5)
 
@@ -103,13 +103,14 @@ class AccountPage(Frame):
         if hasattr(self.parent, "show_interactive_page"):
             self.parent.show_interactive_page()
 
-    def go_home(self):
+    def go_home(self): # go to home page
         if hasattr(self.parent, "show_home_page"):
             self.parent.show_home_page()
 
-    def go_documents(self):
-        print("Go documents")
+    def go_ride_status(self): # go to ride status page
+        if hasattr(self.parent, "show_ride_status_page"):
+            self.parent.show_ride_status_page()
 
-    def go_profile(self):
+    def go_profile(self): # go to account page
         if hasattr(self.parent, "show_account_page"):
             self.parent.show_account_page()
