@@ -77,14 +77,17 @@ class RideStatus(Frame):
         nav_bar.pack_propagate(False)
     
         Button(nav_bar, text="🏠", font=("Arial", 20), bg="#ffc4d6", bd=0, activebackground="#ffc4d6", cursor="hand2", command=self.go_home).place(x=40, y=5)
-        Button(nav_bar, text="📄", font=("Arial", 20), bg="#ffc4d6", bd=0, activebackground="#ffc4d6", cursor="hand2", command=self.go_documents).place(x=175, y=5)
+        Button(nav_bar, text="📄", font=("Arial", 20), bg="#ffc4d6", bd=0, activebackground="#ffc4d6", cursor="hand2", command=self.go_ride_status).place(x=175, y=5)
         Button(nav_bar, text="👤", font=("Arial", 20), bg="#ffc4d6", bd=0, activebackground="#ffc4d6", cursor="hand2", command=self.go_profile).place(x=320, y=5)
 
-    def go_home(self):
-        print("Go Home")
+    def go_home(self): # go to home page
+        if hasattr(self.parent, "show_home_page"):
+            self.parent.show_home_page()
 
-    def go_documents(self):
-        print("Go Documents")
+    def go_ride_status(self): # go to ride status page
+        if hasattr(self.parent, "show_ride_status_page"):
+            self.parent.show_ride_status_page()
 
-    def go_profile(self):
-        print("Go Profile")
+    def go_profile(self): # go to account page
+        if hasattr(self.parent, "show_account_page"):
+            self.parent.show_account_page()
