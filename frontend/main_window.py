@@ -13,6 +13,7 @@ from backend.ride_booking import RideBackend
 from .looking_page import LookingPage
 from .ride_arrival_page import RideArrivalPage
 from .booked_page import BookedPage
+from .help_center_page import HelpCenterPage
 
 class MainWindow(Tk):
     '''
@@ -125,3 +126,11 @@ class MainWindow(Tk):
         # Create and show the looking page
         self.ride_arrival_page = BookedPage(self, pickup, dropoff, vehicle, price, booking_id, estimated_duration, license_plate, driver_name, vehicle_name)
         self.ride_arrival_page.pack(fill="both", expand=True)
+
+    def show_helpcenter_page(self):
+        # Hide current page
+        self.clear_current_page()
+
+        # Create and show the home page
+        self.helpcenter_page = HelpCenterPage(self)
+        self.helpcenter_page.pack(fill=BOTH, expand=True)
