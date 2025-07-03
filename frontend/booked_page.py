@@ -36,12 +36,11 @@ class BookedPage(Frame):
 
         # Fonts
         self.booking_info_font = Font.Font(family="Montserrat", size=12)
-        self.loading_font = Font.Font(family="Montserrat", size=15, weight="bold")
         self.location_font = Font.Font(family="Montserrat", size=11, weight="bold")
         self.distance_font = Font.Font(family="Montserrat", size=10, weight="bold")
         self.selection_font = Font.Font(family="Montserrat", size=12, weight="bold")
+        self.vname_font = Font.Font(family="Montserrat", size=10, weight="bold")
         self.back_font = Font.Font(family="League Spartan", size=12, weight="bold")
-        self.cancel_font = Font.Font(family="League Spartan", size=12, weight="bold")
 
         # Back Button Container
         back_con = Frame(self, bg="#ffc4d6", width=390, height=50)
@@ -50,7 +49,7 @@ class BookedPage(Frame):
         self.create_back_button(back_con).place(x=10, y=12)
 
         # Map Container
-        self.map_frame = Frame(self, width=390, height=350, bg="#8f8f8f")
+        self.map_frame = Frame(self, width=390, height=405, bg="#8f8f8f")
         self.map_frame.pack(pady=0)
         self.map_frame.pack_propagate(False)
 
@@ -84,7 +83,6 @@ class BookedPage(Frame):
         self.duration_label = Label(duration_row, text=".....", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee")
         self.duration_label.pack(side=RIGHT)
 
-
         # Placeholder Driver Info Frame
         driver_info_frame = Frame(self.options_frame, bg="white", width=390, height=60)
         driver_info_frame.pack(pady=(15, 15))
@@ -111,11 +109,11 @@ class BookedPage(Frame):
         vehicle_label_frame = Frame(driver_info_frame, bg="white")
         vehicle_label_frame.pack(side="right", padx=(0, 20), pady=10, anchor="e")
 
-        Label(vehicle_label_frame, text=self.vehicle_name, font=self.selection_font, fg="#8f8f8f", bg="white", anchor="e", justify="right").pack(anchor="e")
         Label(vehicle_label_frame, text=self.license_plate, font=self.selection_font, fg="#8f8f8f", bg="white", anchor="e", justify="right").pack(anchor="e")
+        Label(vehicle_label_frame, text=self.vehicle_name, font=self.vname_font, fg="#8f8f8f", bg="white", anchor="e", justify="right").pack(anchor="e")
 
         # Location Display
-        location_frame = Frame(self.options_frame, bg="white", width=390, height=85)
+        location_frame = Frame(self.options_frame, bg="white", width=390, height=95)
         location_frame.pack()
         location_frame.pack_propagate(False)
 
@@ -183,7 +181,7 @@ class BookedPage(Frame):
         Label(vehicle_frame, text=self.selected_price, font=self.selection_font, fg="#8f8f8f", bg="white").place(x=300, y=20)
 
         footer = Frame(self, bg="#ff8fab", width=390, height=50)
-        footer.place(y=734)
+        footer.place(y=794)
         footer.pack_propagate(False)
 
         self.after(100, self.load_static_map)

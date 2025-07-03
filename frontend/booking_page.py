@@ -43,7 +43,7 @@ class BookingPage(Frame):
         self.create_back_button(back_con).place(x=10, y=12)
 
         # Map Container
-        self.map_frame = Frame(self, width=390, height=350, bg="gray")
+        self.map_frame = Frame(self, width=390, height=405, bg="gray")
         self.map_frame.pack(pady=0)
         self.map_frame.pack_propagate(False)
 
@@ -116,11 +116,11 @@ class BookingPage(Frame):
         price_container.pack(pady=(5, 0))
         Label(price_container, text="Price", font=self.price_label_font, fg="black", bg="white").place(x=5)
         self.price_value = Label(price_container, text="\u20b1 000.00", font=self.price_font, fg="black", bg="white")
-        self.price_value.place(x=275)
+        self.price_value.place(x=265)
 
         # Confirm Button Container
         confirm_con = Frame(self, bg="#ff8fab", width=390, height=50)
-        confirm_con.place(y=734)
+        confirm_con.place(y=794)
         confirm_con.pack_propagate(False)
         self.create_confirm_button(confirm_con).place(x=300, y=12)
 

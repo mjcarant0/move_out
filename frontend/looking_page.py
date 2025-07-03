@@ -33,7 +33,7 @@ class LookingPage(Frame):
 
         # Fonts
         self.booking_info_font = Font.Font(family="Montserrat", size=12)
-        self.loading_font = Font.Font(family="Montserrat", size=15, weight="bold")
+        self.loading_font = Font.Font(family="Montserrat", size=13, weight="bold")
         self.location_font = Font.Font(family="Montserrat", size=11, weight="bold")
         self.distance_font = Font.Font(family="Montserrat", size=10, weight="bold")
         self.selection_font = Font.Font(family="Montserrat", size=12, weight="bold")
@@ -47,7 +47,7 @@ class LookingPage(Frame):
         self.create_back_button(back_con).place(x=10, y=12)
 
         # Map Container
-        self.map_frame = Frame(self, width=390, height=350, bg="#8f8f8f")
+        self.map_frame = Frame(self, width=390, height=405, bg="#8f8f8f")
         self.map_frame.pack(pady=0)
         self.map_frame.pack_propagate(False)
 
@@ -81,11 +81,11 @@ class LookingPage(Frame):
         self.duration_label = Label(duration_row, text=".....", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee")
         self.duration_label.pack(side=RIGHT)
 
-        Label(info_frame, text="Looking for a Ride...", font=self.loading_font, fg="#8f8f8f", bg="#eeeeee").place(anchor="center", x=195, y=72)
+        Label(info_frame, text="Looking for a Ride...", font=self.loading_font, fg="#8f8f8f", bg="#eeeeee").place(anchor="center", x=195, y=80)
 
         # Driver Info Frame
         driver_info_frame = Frame(self.options_frame, bg="white", width=390, height=60)
-        driver_info_frame.pack(pady=(8, 10))
+        driver_info_frame.pack(pady=(5, 10))
         driver_info_frame.pack_propagate(False)
 
         # Circle (profile placeholder)
@@ -102,7 +102,7 @@ class LookingPage(Frame):
         Label(vehicle_label_frame, text="--", font=self.selection_font, fg="#8f8f8f", bg="white", anchor="e", justify="right").pack(anchor="e")
 
         # Location Display
-        location_frame = Frame(self.options_frame, bg="white", width=390, height=85)
+        location_frame = Frame(self.options_frame, bg="white", width=390, height=95)
         location_frame.pack()
         location_frame.pack_propagate(False)
 
@@ -171,7 +171,7 @@ class LookingPage(Frame):
 
         # Cancel Button
         cancel_con = Frame(self, bg="#ff8fab", width=390, height=50)
-        cancel_con.place(y=734)
+        cancel_con.place(y=794)
         cancel_con.pack_propagate(False)
         self.create_cancel_button(cancel_con).place(x=300, y=12)
 

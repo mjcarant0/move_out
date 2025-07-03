@@ -115,7 +115,7 @@ class RideBackend:
 
         marker_params = "&".join([f"markers={urllib.parse.quote(m)}" for m in markers])
         path_param = f"path={urllib.parse.quote(path)}"
-        size_param = "size=390x350"
+        size_param = "size=390x405"
         maptype_param = "maptype=roadmap"
         key_param = f"key={self.api_key}"
 
