@@ -188,6 +188,17 @@ class BookingPage(Frame):
             vehicle = self.selected_vehicle
             price = self.price_value.cget("text")
             driver_info = self.backend.get_driver_info(vehicle)
+
+        if hasattr(self.parent, "ride_status_page") and hasattr(self.parent.ride_status_page, "set_ride_details"):
+            duration = self.backend.get_estimated_duration(self.pickup_location, self.dropoff_location)
+            self.parent.ride_status_page.set_ride_details(
+                self.pickup_location,
+                self.dropoff_location,
+                vehicle,
+                price,
+                duration
+            )
+
             if hasattr(self.parent, "show_looking_page") and driver_info:
                 license_plate = driver_info.get("license_plate", "")
                 driver_name = driver_info.get("driver_name", "")
