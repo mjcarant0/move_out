@@ -3,8 +3,8 @@ This module handles user login/authentication functionality.
 It validates inputs and checks user credentials using InputValidator and DatabaseManager.
 """
 
-from database_manager import DatabaseManager  # Manages database operations like querying user data
-from validators import InputValidator         # Used to validate and clean user-provided login inputs
+from backend.database_manager import DatabaseManager  # Manages database operations like querying user data
+from backend.validators import InputValidator         # Used to validate and clean user-provided login inputs
 from typing import Dict, Any                  # Provides type hints (for better clarity)
 
 class LoginHandler:
@@ -16,7 +16,7 @@ class LoginHandler:
         self.validator = InputValidator()   # Initialize the input validator
 
     
-    def authenticate_user(self, country_code: str, phone_number: str, pin: str = None) -> Dict[str, Any]:
+    def authenticate_user(self, phone_number: str, pin: str = None) -> Dict[str, Any]:
         """
         Authenticates user in a two-step login process.
 
@@ -25,12 +25,8 @@ class LoginHandler:
         """
         try:
             # Clean and format inputs
-            country_code = self.validator.format_country_code(country_code)  
+            country_code = "+63" 
             phone_number = self.validator.clean_phone_number(phone_number)
-            
-            # Validate country code
-            if not self.validator.validate_country_code(country_code):
-                return {"success": False, "message": "Invalid country code."}
             
             # Validate phone number format
             if not self.validator.validate_phone_number(phone_number):
