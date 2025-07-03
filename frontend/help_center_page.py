@@ -5,14 +5,13 @@ This module defines the HelpCenterPage class, which provides a
 searchable list of FAQs with expandable answers
 """
 
+import os
+
 from tkinter import *
 from tkinter.font import Font
 from PIL import Image, ImageTk
-import os, sys
 
-# Import backend search
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'backend')))
-from backend_faq import search_faqs
+from backend.backend_faq import search_faqs
 
 
 class FAQItem(Frame):
