@@ -14,21 +14,24 @@ class HomePage(Frame):
         self.suggestions_box = None
         self.active_entry = None
 
-        self.title_font = Font.Font(family="Poppins", size=28, weight="bold")
+        self.title_font = Font.Font(family="Poppins", size=22, weight="bold")
         self.label_font = Font.Font(family="Montserrat", size=12, weight="bold")
         self.proceed_font = Font.Font(family="League Spartan", size=10, weight="bold")
         self.placeholder_font = Font.Font(family="Montserrat", size=9)
+        self.help_font = Font.Font(family="Poppins", size=28, weight="bold")
+        self.helpdesk_font = Font.Font(family="League Spartan", size=10)
 
         # Pink Divider
         pink_div = Frame(self, bg="#ffc4d6", width=390, height=315)
         pink_div.pack(fill=X)
         pink_div.pack_propagate(False)
-
+        
+        # Title label
         Label(pink_div, text="SECURELY BOOK YOUR\nRIDE", font=self.title_font, bg="#ffc4d6", fg="white", justify="left").pack(anchor="w", pady=(60, 20), padx=25)
  
         # Light Pink Container
-        lpink_box = Frame(self, bg="#ffe5ec", width=300, height=280)
-        lpink_box.place(x=45, y=157)
+        lpink_box = Frame(self, bg="#ffe5ec", width=300, height=310)
+        lpink_box.place(x=45, y=205)
         lpink_box.pack_propagate(False)
 
         self.warning_label = Label(lpink_box, text="", fg="red", bg="#ffe5ec", font=self.placeholder_font)
@@ -36,7 +39,7 @@ class HomePage(Frame):
 
         # Navigation Bar
         nav_bar = Frame(self, bg="#ffc4d6", width=390, height=65)
-        nav_bar.place(y=719)
+        nav_bar.place(y=780)
         nav_bar.pack_propagate(False)
 
         Button(nav_bar, text="🏠", font=("Arial", 20), bg="#ffc4d6", bd=0,
@@ -48,7 +51,7 @@ class HomePage(Frame):
 
         # Pickup container
         pickup_box = Frame(lpink_box, bg="white", width=250, height=65)
-        pickup_box.pack(pady=(40, 0))
+        pickup_box.pack(pady=(25, 0))
         pickup_box.pack_propagate(False)
 
         Label(pickup_box, text="Pickup", font=self.label_font, fg="#f38c9f", bg="white").place(x=5, y=5)
@@ -78,12 +81,29 @@ class HomePage(Frame):
 
         self.create_proceed_button(lpink_box).pack(pady=(20, 0))
 
+        # Need Help Container
+        help_box = Frame(self, bg="white", width=400, height=200)
+        help_box.place(x=0, y=560)  # Adjust Y position as needed
+
+        Label(help_box, text="NEED HELP?", font=self.help_font, bg="white", fg="#f38c9f").place(x=25, y=30)
+        Label(help_box, text="Visit our Help Center to find answers to all\nfrequently asked questions", font=self.helpdesk_font, bg="white", fg="black", wraplength=340, justify="left").place(x=25, y=85)
+
+        self.create_helpdesk_button(help_box).place(x=25, y=145)
+
+
     def create_proceed_button(self, lpink_box):
         canvas = Canvas(lpink_box, width=250, height=26, bg="#ffc4d6", highlightthickness=0, cursor="hand2")
         canvas.create_rectangle(0, 0, 250, 26, fill="#f38c9f", outline="#f38c9f", width=2)
         canvas.create_text(125, 13, text="PROCEED", fill="white", font=("League Spartan", 10, "bold"))
 
         canvas.bind("<Button-1>", self.on_proceed_clicked)
+        return canvas
+    
+    def create_helpdesk_button(self, help_box):
+        canvas = Canvas(help_box, width=130, height=26, bg="white", highlightthickness=0, cursor="hand2")
+        canvas.create_rectangle(0, 0, 130, 26, fill="#f38c9f", outline="#f38c9f", width=2)
+        canvas.create_text(60, 13, text="TO HELP CENTER →", fill="white", font=("League Spartan", 10, "bold"))
+        canvas.bind("<Button-1>", self.go_helpdesk)
         return canvas
 
     def on_proceed_clicked(self, event):
@@ -108,6 +128,10 @@ class HomePage(Frame):
         if not entry.get():
             entry.insert(0, placeholder)
             entry.config(fg="gray")
+    
+    def go_helpdesk(self, event):
+        if hasattr(self.parent, "show_help_center_page"):
+            self.parent.show_help_center_page()
 
     def go_home(self):
         if hasattr(self.parent, "show_home_page"):
