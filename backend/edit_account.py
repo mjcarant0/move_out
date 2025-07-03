@@ -3,8 +3,8 @@ This module handles editing user account information and changing user PINs.
 It performs validation and database updates using InputValidator and DatabaseManager.
 """
 
-from database_manager import DatabaseManager   # Handles queries and updates to the user database
-from validators import InputValidator          # Validates and formats input fields before saving
+from backend.database_manager import DatabaseManager   # Handles queries and updates to the user database
+from backend.validators import InputValidator          # Validates and formats input fields before saving
 from typing import Dict, Any, Optional         # Provides type annotations for clarity
 
 class EditAccountHandler:
