@@ -197,6 +197,18 @@ class BookedPage(Frame):
         return canvas
 
     def on_back_clicked(self, event):
+        if hasattr(self.parent, "ride_status_page"):
+            ride_status = self.parent.ride_status_page
+
+            if not ride_status.ride_active:
+                ride_status.set_ride_details(
+                    self.pickup_location,
+                    self.dropoff_location,
+                    self.selected_vehicle,
+                    self.selected_price,
+                    self.duration_label.cget("text")
+                )
+
         if hasattr(self.parent, "show_home_page"):
             self.parent.show_home_page()
 
@@ -220,3 +232,12 @@ class BookedPage(Frame):
         self.booking_id_label.config(text=self.booking_id)
         self.duration_label.config(text=self.estimated_duration)
         self.distance_value.config(text=f"{distance:.2f} km")
+
+        if hasattr(self.parent, "ride_status_page"):
+            self.parent.ride_status_page.set_ride_details(
+                pickup=self.pickup_location,
+                dropoff=self.dropoff_location,
+                vehicle=self.selected_vehicle,
+                price=self.selected_price,
+                duration_str=self.estimated_duration
+            )
