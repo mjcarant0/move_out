@@ -1,6 +1,8 @@
 from tkinter import *
 import tkinter.font as Font
 
+from .ride_status_pending import RideStatus
+
 class HomePage(Frame):
     '''
         This program provides the home page for Move Out.
@@ -138,7 +140,8 @@ class HomePage(Frame):
             self.parent.show_home_page()
 
     def go_documents(self):
-        print("Go documents")
+        if hasattr(self.parent, "show_ride_status_page"):
+            self.parent.show_ride_status_page()
 
     def go_profile(self):
         if hasattr(self.parent, "show_account_page"):
