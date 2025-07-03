@@ -46,7 +46,7 @@ class RideStatusPage(Frame):
 
         # Navigation bar
         nav_bar = Frame(self, bg="#ffc4d6", width=390, height=65)
-        nav_bar.place(y=719)
+        nav_bar.place(y=779)
         nav_bar.pack_propagate(False)
         Button(nav_bar, text="🏠", font=("Arial", 20), bg="#ffc4d6", bd=0,
                activebackground="#ffc4d6", cursor="hand2", command=self.go_home).place(x=40, y=5)
