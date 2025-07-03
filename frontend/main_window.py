@@ -26,6 +26,7 @@ class MainWindow(Tk):
         
         self.current_user_phone = None
         self.backend = RideBackend(api_key="AIzaSyAOKrot0gO67ji8DpUmxN3FdXRBfMsCvRQ")
+        self.ride_status_page = RideStatusPage(self)
 
         os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -140,7 +141,10 @@ class MainWindow(Tk):
     def show_ride_status_page(self):
         # Hide current page
         self.clear_current_page()
-
-        # Create and show the ride status page
-        self.ride_status_page = RideStatusPage(self)
         self.ride_status_page.pack(fill=BOTH, expand=True)
+        
+        # Optional: force it to refresh correct tab
+        if not self.ride_status_page.ride_active:
+            self.ride_status_page.show_canceled()
+        else:
+            self.ride_status_page.show_pending()
