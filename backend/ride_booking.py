@@ -45,11 +45,11 @@ class RideBackend:
         base_fare = base_fares.get(vehicle_type, 50)  # Default to 50 if unknown
 
         if distance_km <= 2:
-            return base_fare
+            return round(base_fare)
         elif distance_km <= 7:
-            return base_fare + (distance_km - 2) * 10
+            return round(base_fare + (distance_km - 2) * 10)
         else:
-            return base_fare + (5 * 10) + (distance_km - 7) * 15
+            return round(base_fare + (5 * 10) + (distance_km - 7) * 15)
 
     # Autocomplete place suggestions
     def autocomplete_place(self, input_text):
