@@ -212,12 +212,35 @@ class RideArrivalPage(Frame):
             self.after_cancel(self.after_id)
 
     def on_back_clicked(self, event):
-        self.cancel_transition()
-        if hasattr(self.parent, "show_booking_page"):
-            self.parent.show_booking_page(self.pickup_location, self.dropoff_location)
+        if hasattr(self.parent, "ride_status_page"):
+            ride_status = self.parent.ride_status_page
+
+            if not ride_status.ride_active:
+                ride_status.set_ride_details(
+                    self.pickup_location,
+                    self.dropoff_location,
+                    self.selected_vehicle,
+                    self.selected_price,
+                    self.duration_label.cget("text")
+                )
+
+        if hasattr(self.parent, "show_home_page"):
+            self.parent.show_home_page()
 
     def on_cancel_clicked(self, event):
         self.cancel_transition()
+
+        if hasattr(self.parent, "ride_status_page"):
+            self.parent.ride_status_page.add_canceled_ride(
+                self.pickup_location,
+                self.dropoff_location,
+                self.selected_vehicle,
+                self.selected_price
+            )
+
+            # Force ride status tab to show CANCELED view
+            self.parent.ride_status_page.show_canceled()
+
         if hasattr(self.parent, "show_home_page"):
             self.parent.show_home_page()
 
@@ -245,6 +268,9 @@ class RideArrivalPage(Frame):
         self.distance_value.config(text=f"{distance:.2f} km")
 
     def open_booked_page(self):
+        if not self.winfo_exists():
+            return  # Prevent transition if frame was destroyed/canceled
+
         if hasattr(self.parent, "show_booked_page"):
             self.parent.show_booked_page(
                 self.pickup_location,
