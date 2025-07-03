@@ -33,7 +33,7 @@ class FAQItem(Frame):
             wraplength=320,
             justify="left"
         )
-        self.question_button.pack(fill="x", pady=(5, 0), ipady=10)  # Moved ipady here ✅
+        self.question_button.pack(fill="x", pady=(5, 0), ipady=10)
 
         self.answer_label = Label(
             self,
@@ -70,6 +70,7 @@ class FAQItem(Frame):
 class HelpCenterPage(Frame):
     def __init__(self, parent):
         super().__init__(parent, bg="#ffc4d6")
+        self.parent = parent  # ✅ Added this line to fix AttributeError
 
         self.title_font = Font(family="Poppins", size=30, weight="bold")
         self.subheading_font = Font(family="League Spartan", size=15, weight="bold")
@@ -134,8 +135,8 @@ class HelpCenterPage(Frame):
 
         # Scroll events
         self.canvas.bind_all("<MouseWheel>", lambda e: self.canvas.yview_scroll(int(-1 * (e.delta / 120)), "units"))
-        self.canvas.bind_all("<Button-4>", lambda e: self.canvas.yview_scroll(-1, "units"))  # Linux scroll up
-        self.canvas.bind_all("<Button-5>", lambda e: self.canvas.yview_scroll(1, "units"))   # Linux scroll down
+        self.canvas.bind_all("<Button-4>", lambda e: self.canvas.yview_scroll(-1, "units"))  
+        self.canvas.bind_all("<Button-5>", lambda e: self.canvas.yview_scroll(1, "units"))   
 
         self.display_faqs("")
 
