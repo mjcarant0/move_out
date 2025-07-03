@@ -13,7 +13,7 @@ class InputValidator:
     def validate_phone_number(phone_number: str) -> bool:
         """Validate phone number format"""
         cleaned = re.sub(r'[\s\-\(\)]', '', phone_number)     # Remove spaces, dashes, and parentheses
-        return cleaned.isdigit() and 7 <= len(cleaned) <= 15  # Must contain digits only and between 7–15 characters
+        return cleaned.isdigit() and len(cleaned) == 10  # Must contain digits only and between 7–15 characters
 
     
     @staticmethod
@@ -30,21 +30,6 @@ class InputValidator:
     def validate_name(name: str) -> bool:
         """Validate name"""
         return bool(name.strip()) and re.match(r'^[a-zA-Z\s]+$', name.strip())   # No numbers or symbols allowed
-
-    
-    # Valid ASEAN country codes for the app
-    VALID_COUNTRY_CODES = [
-        "+673", "+855", "+62", "+856", "+60", "+95", 
-        "+63", "+65", "+66", "+670", "+84"
-    ]
-    
-    @staticmethod
-    def validate_country_code(country_code: str) -> bool:
-        """Validate country code against ASEAN countries only."""
-        country_code = country_code.strip()  # Remove spaces
-        if not country_code.startswith('+'): 
-            country_code = '+' + country_code   # Add "+" if missing
-        return country_code in InputValidator.VALID_COUNTRY_CODES  # Check if it's in the allowed list
     
     @staticmethod
     def clean_phone_number(phone_number: str) -> str:
@@ -55,10 +40,4 @@ class InputValidator:
     def format_name(name: str) -> str:
         """Format name to title case."""
         return name.strip().title()
-    
-    @staticmethod
-    def format_country_code(country_code: str) -> str:
-        """Format country code to include '+' prefix."""
-        country_code = country_code.strip()
-        return country_code if country_code.startswith('+') else '+' + country_code
     
