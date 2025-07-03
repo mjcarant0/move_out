@@ -23,6 +23,8 @@ class MainWindow(Tk):
     '''
     def __init__(self):
         super().__init__()
+        
+        self.current_user_phone = None
         self.backend = RideBackend(api_key="AIzaSyAOKrot0gO67ji8DpUmxN3FdXRBfMsCvRQ")
 
         os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -100,7 +102,7 @@ class MainWindow(Tk):
         self.clear_current_page()
 
         # Create and show the account page
-        self.account_page = AccountPage(self)
+        self.account_page = AccountPage(self, self.current_user_phone)
         self.account_page.pack(fill=BOTH, expand=True)
 
     def show_looking_page(self, pickup, dropoff, vehicle, price, license_plate, driver_name, vehicle_name):
