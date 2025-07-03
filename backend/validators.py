@@ -12,7 +12,7 @@ class InputValidator:
     @staticmethod
     def validate_phone_number(phone_number: str) -> bool:
         """Validate phone number format"""
-        cleaned = re.sub(r'[\s\-\(\)]', '', phone_number)     # Remove spaces, dashes, and parentheses
+        cleaned = InputValidator.clean_phone_number(phone_number)
         return cleaned.isdigit() and len(cleaned) == 10  # Must contain digits only and between 7–15 characters
 
     
@@ -41,3 +41,16 @@ class InputValidator:
         """Format name to title case."""
         return name.strip().title()
     
+    @staticmethod
+    def format_phone_number(phone_number: str) -> str:
+        """
+        Convert a 10-digit PH number (e.g., 9082714653) into +63 format (e.g., +639082714653).
+        """
+        cleaned = InputValidator.clean_phone_number(phone_number)
+
+        if len(cleaned) == 10 and cleaned.isdigit():
+            return "+63" + cleaned
+        elif cleaned.startswith("+63") and len(cleaned) == 13:
+            return cleaned
+        else:
+            return cleaned  # Return as-is if already +63 or invalid
