@@ -20,6 +20,11 @@ class InputValidator:
     def validate_pin(pin: str) -> bool:
         """Validate pin format"""
         return pin.isdigit() and len(pin) == 4  #Must be numeric and exactly 4 characters
+
+    @staticmethod
+    def validate_pin_confirmation(pin: str, confirm_pin: str) -> bool:  
+        """Validate that PIN and confirmation PIN match."""
+        return pin == confirm_pin   # Ensure the confirmation PIN matches the original PIN
     
     @staticmethod
     def validate_name(name: str) -> bool:
