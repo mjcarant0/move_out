@@ -77,7 +77,7 @@ class LoginPage(Frame):
         pin_inner = Frame(pin_border, bg="white")
         pin_inner.pack(fill=BOTH, padx=1, pady=1)
 
-        self.pin_entry = Entry(pin_inner, font=self.phone_font, bd=0, fg="gray", bg="white")
+        self.pin_entry = Entry(pin_inner, font=self.phone_font, bd=0, fg="gray", bg="white", show="")
         self.pin_entry.insert(0, "PIN (4 digits only)")
         self.pin_entry.pack(fill=X, ipady=5)
         self.pin_entry.bind("<FocusIn>", lambda e: self.clear_placeholder(self.pin_entry, "PIN (4 digits only)"))
@@ -103,12 +103,17 @@ class LoginPage(Frame):
         if entry_widget.get() == placeholder_text or getattr(entry_widget, "is_error", False):
             entry_widget.delete(0, END)
             entry_widget.config(fg="black")
+            if entry_widget == self.pin_entry:
+                entry_widget.config(show="*")
             entry_widget.is_error = False
 
     def restore_placeholder(self, entry_widget, placeholder_text):
         if not entry_widget.get():
             entry_widget.insert(0, placeholder_text)
             entry_widget.config(fg="gray")
+            if entry_widget == self.pin_entry:
+                entry_widget.config(show="")
+
 
     def set_error_style(self, entry_widget, message):
         '''
