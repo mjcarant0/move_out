@@ -14,7 +14,7 @@ from .looking_page import LookingPage
 from .ride_arrival_page import RideArrivalPage
 from .booked_page import BookedPage
 from .help_center_page import HelpCenterPage
-from .ride_status_pending import RideStatus
+from .ride_status_page import RideStatusPage
 
 class MainWindow(Tk):
     '''
@@ -139,6 +139,6 @@ class MainWindow(Tk):
         # Hide current page
         self.clear_current_page()
 
-        # Create and show the help center page
-        self.ride_status_page = RideStatus(self)
+        # Create and show the ride status page
+        self.ride_status_page = RideStatusPage(self)
         self.ride_status_page.pack(fill=BOTH, expand=True)
