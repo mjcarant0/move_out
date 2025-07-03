@@ -3,6 +3,7 @@ This module manages all database operations for the app, including connecting
 to the SQLite database, initializing user tables, handling signup, login, and account updates.
 """
 
+import os
 import sqlite3  # Enables creating and interacting with the local user database.
 from typing import Any  # Used for type hints when return types may vary
 
@@ -10,10 +11,13 @@ class DatabaseManager:
     # Provides methods for interacting with the user database, such as creating tables, 
     # inserting users, validating credentials, and updating account information.
 
-    def __init__(self, db_name: str = "user_information.db"):
-        # Constructor: initializes the database manager with the given database file name.
-        # If no name is provided, it defaults to "user_information.db".
-        self.db_name = db_name
+    def __init__(self, db_name: str = None):
+        # Set path to /move_out/data/user_information.db
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # move_out/
+        data_dir = os.path.join(base_dir, "data")
+        os.makedirs(data_dir, exist_ok=True)
+
+        self.db_name = db_name or os.path.join(data_dir, "user_information.db")
         self._initialize_database()
     
     def _initialize_database(self) -> None:
