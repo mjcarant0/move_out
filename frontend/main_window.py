@@ -14,6 +14,7 @@ from .looking_page import LookingPage
 from .ride_arrival_page import RideArrivalPage
 from .booked_page import BookedPage
 from .help_center_page import HelpCenterPage
+from .ride_status_pending import RideStatus
 
 class MainWindow(Tk):
     '''
@@ -115,7 +116,6 @@ class MainWindow(Tk):
         self.clear_current_page()
 
         # Create and show the looking page
-        
         self.ride_arrival_page = RideArrivalPage(self, pickup, dropoff, vehicle, price, license_plate, driver_name, vehicle_name)
         self.ride_arrival_page.pack(fill="both", expand=True)
 
@@ -131,6 +131,14 @@ class MainWindow(Tk):
         # Hide current page
         self.clear_current_page()
 
-        # Create and show the home page
+        # Create and show the help center page
         self.helpcenter_page = HelpCenterPage(self)
         self.helpcenter_page.pack(fill=BOTH, expand=True)
+    
+    def show_ride_status_page(self):
+        # Hide current page
+        self.clear_current_page()
+
+        # Create and show the help center page
+        self.ride_status_page = RideStatus(self)
+        self.ride_status_page.pack(fill=BOTH, expand=True)
