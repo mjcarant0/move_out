@@ -12,9 +12,8 @@ from io import BytesIO
 
 class BookedPage(Frame):
     '''
-        This program provides the Ride Arrival page for Move Out.
-        It displays the ride details, map, and allows the user to cancel the ride.
-        It also shows the booking ID, estimated duration, and distance.
+    Displays the booked ride page for Move Out.
+    Shows ride details, map, booking ID, estimated duration, and distance.
     '''
     def __init__(self, parent, pickup_location, dropoff_location, selected_vehicle, selected_price, booking_id, estimated_duration, license_plate, driver_name, vehicle_name):
         super().__init__(parent)
@@ -31,7 +30,6 @@ class BookedPage(Frame):
         self.booking_id = booking_id
         self.estimated_duration = estimated_duration
 
-        # [Added] RideBackend instantiated to access backend methods like booking ID, distance, duration
         self.backend = RideBackend("AIzaSyAOKrot0gO67ji8DpUmxN3FdXRBfMsCvRQ")
 
         # Fonts
@@ -42,27 +40,25 @@ class BookedPage(Frame):
         self.vname_font = Font.Font(family="Montserrat", size=10, weight="bold")
         self.back_font = Font.Font(family="League Spartan", size=12, weight="bold")
 
-        # Back Button Container
+        # Header with back button
         back_con = Frame(self, bg="#ffc4d6", width=390, height=50)
-        back_con.pack(padx=0, pady=0, fill=X)
+        back_con.pack(fill=X)
         back_con.pack_propagate(False)
         self.create_back_button(back_con).place(x=10, y=12)
 
-        # Map Container
+        # Map section
         self.map_frame = Frame(self, width=390, height=405, bg="#8f8f8f")
-        self.map_frame.pack(pady=0)
+        self.map_frame.pack()
         self.map_frame.pack_propagate(False)
 
-        # Map Image
         self.map_img_label = Label(self.map_frame, bg="#8f8f8f")
         self.map_img_label.pack(expand=True)
 
-        # Option Container
+        # Ride details section
         self.options_frame = Frame(self, width=390, height=350, bg="white")
-        self.options_frame.pack(pady=0)
+        self.options_frame.pack()
         self.options_frame.pack_propagate(False)
 
-        # [Added] Ride Info Container to display booking ID and duration
         info_frame = Frame(self.options_frame, bg="#eeeeee", width=390, height=75)
         info_frame.pack()
         info_frame.pack_propagate(False)
@@ -70,25 +66,22 @@ class BookedPage(Frame):
         # Booking ID row
         booking_row = Frame(info_frame, bg="#eeeeee")
         booking_row.pack(fill=X, padx=25, pady=(10, 0))
-
         Label(booking_row, text="Booking ID", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee").pack(side=LEFT)
         self.booking_id_label = Label(booking_row, text=".....", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee")
         self.booking_id_label.pack(side=RIGHT)
 
-        # Duration row
+        # Estimated duration row
         duration_row = Frame(info_frame, bg="#eeeeee")
         duration_row.pack(fill=X, padx=25, pady=(5, 0))
-
         Label(duration_row, text="Estimated Ride Duration", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee").pack(side=LEFT)
         self.duration_label = Label(duration_row, text=".....", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee")
         self.duration_label.pack(side=RIGHT)
 
-        # Placeholder Driver Info Frame
+        # Driver and vehicle information
         driver_info_frame = Frame(self.options_frame, bg="white", width=390, height=60)
         driver_info_frame.pack(pady=(15, 15))
         driver_info_frame.pack_propagate(False)
 
-        # Load driver image based on backend data
         try:
             driver_info = self.backend.get_driver_info(self.selected_vehicle)
             driver_img_filename = driver_info.get("img")
@@ -102,22 +95,18 @@ class BookedPage(Frame):
         except Exception as e:
             print(f"[Error] Loading driver image: {e}")
 
-        # Driver Name Placeholder
         Label(driver_info_frame, text=self.driver_name, font=self.selection_font, fg="#8f8f8f", bg="white").place(x=80, y=20)
 
-        # Vehicle Placeholder
         vehicle_label_frame = Frame(driver_info_frame, bg="white")
         vehicle_label_frame.pack(side="right", padx=(0, 20), pady=10, anchor="e")
-
         Label(vehicle_label_frame, text=self.license_plate, font=self.selection_font, fg="#8f8f8f", bg="white", anchor="e", justify="right").pack(anchor="e")
         Label(vehicle_label_frame, text=self.vehicle_name, font=self.vname_font, fg="#8f8f8f", bg="white", anchor="e", justify="right").pack(anchor="e")
 
-        # Location Display
+        # Pickup and dropoff locations
         location_frame = Frame(self.options_frame, bg="white", width=390, height=95)
         location_frame.pack()
         location_frame.pack_propagate(False)
 
-        # Base path for image files
         base_path = os.path.dirname(__file__)
         pickup_path = os.path.join(base_path, "..", "media", "pickup.png")
         dropoff_path = os.path.join(base_path, "..", "media", "dropoff.png")
@@ -131,7 +120,6 @@ class BookedPage(Frame):
         self.dropoff_img = ImageTk.PhotoImage(dropoff_image)
         self.line_img = ImageTk.PhotoImage(line_image)
 
-        # Row and Column for proper image and text alignment
         info_row = Frame(location_frame, bg="white")
         info_row.pack(anchor="w", padx=30)
         icon_column = Frame(info_row, bg="white")
@@ -142,17 +130,17 @@ class BookedPage(Frame):
 
         label_column = Frame(info_row, bg="white")
         label_column.pack(side="left", anchor="n", padx=10)
-        Label(label_column, text=self.pickup_location, font=self.location_font, fg="#8f8f8f", bg="white", anchor="w").pack(anchor="w")
-        Label(label_column, text=self.dropoff_location, font=self.location_font, fg="#8f8f8f", bg="white", anchor="w").pack(anchor="w", pady=(22, 0))
+        Label(label_column, text=self.pickup_location, font=self.location_font, fg="#8f8f8f", bg="white").pack(anchor="w")
+        Label(label_column, text=self.dropoff_location, font=self.location_font, fg="#8f8f8f", bg="white").pack(anchor="w", pady=(22, 0))
 
-        # Distance Info Container
+        # Distance information
         distance_container = Frame(location_frame, bg="white", width=350, height=20)
         distance_container.pack(pady=(5, 0))
         Label(distance_container, text="Distance", font=self.distance_font, fg="#8f8f8f", bg="white").place(x=5)
         self.distance_value = Label(distance_container, text="--", font=self.distance_font, fg="#8f8f8f", bg="white")
         self.distance_value.place(x=290)
 
-        # [Changed] Shows selected vehicle as static info instead of interactive rows
+        # Vehicle summary section
         vehicle_frame = Frame(self.options_frame, bg="white", width=390, height=60)
         vehicle_frame.pack()
         vehicle_frame.pack_propagate(False)
@@ -180,13 +168,12 @@ class BookedPage(Frame):
         Label(vehicle_frame, text=self.selected_vehicle, font=self.selection_font, fg="#8f8f8f", bg="white").place(x=85, y=20)
         Label(vehicle_frame, text=self.selected_price, font=self.selection_font, fg="#8f8f8f", bg="white").place(x=300, y=20)
 
+        # Footer section
         footer = Frame(self, bg="#ff8fab", width=390, height=50)
         footer.place(y=794)
         footer.pack_propagate(False)
 
         self.after(100, self.load_static_map)
-
-        # [Added] Populate backend data like booking ID, estimated duration, and distance
         self.after(300, self.populate_backend_info)
 
     def create_back_button(self, container):
@@ -198,10 +185,7 @@ class BookedPage(Frame):
 
     def on_back_clicked(self, event):
         if hasattr(self.parent, "ride_status_page"):
-            ride_status = self.parent.ride_status_page
-
-            # ✅ Just restore ride info visually, don't set as active
-            ride_status.restore_ride_info(
+            self.parent.ride_status_page.restore_ride_info(
                 self.pickup_location,
                 self.dropoff_location,
                 self.selected_vehicle,
@@ -225,7 +209,6 @@ class BookedPage(Frame):
                 print(f"Map image error: {e}")
                 self.map_img_label.config(text="Map unavailable", fg="white", font=self.booking_info_font)
 
-    # [Added] Calls backend methods to fill in booking ID, ride duration, and distance
     def populate_backend_info(self):
         distance = self.backend.get_distance_km(self.pickup_location, self.dropoff_location)
 

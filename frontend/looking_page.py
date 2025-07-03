@@ -12,9 +12,8 @@ from io import BytesIO
 
 class LookingPage(Frame):
     '''
-        This program provides the "looking for a ride" page for Move Out.
-        It allows the user to cancel and see their ride details and map
-        after confirming their ride selection.
+    Displays the "Looking for a Ride" screen.
+    Shows ride details, estimated duration, and allows canceling the ride.
     '''
     def __init__(self, parent, pickup_location, dropoff_location, selected_vehicle, selected_price, license_plate, driver_name, vehicle_name):
         super().__init__(parent)
@@ -31,7 +30,7 @@ class LookingPage(Frame):
 
         self.backend = RideBackend("AIzaSyAOKrot0gO67ji8DpUmxN3FdXRBfMsCvRQ")
 
-        # Fonts
+        # Font styles
         self.booking_info_font = Font.Font(family="Montserrat", size=12)
         self.loading_font = Font.Font(family="Montserrat", size=13, weight="bold")
         self.location_font = Font.Font(family="Montserrat", size=11, weight="bold")
@@ -40,55 +39,51 @@ class LookingPage(Frame):
         self.back_font = Font.Font(family="League Spartan", size=12, weight="bold")
         self.cancel_font = Font.Font(family="League Spartan", size=12, weight="bold")
 
-        # Back Button Container
+        # Header with back button
         back_con = Frame(self, bg="#ffc4d6", width=390, height=50)
-        back_con.pack(padx=0, pady=0, fill=X)
+        back_con.pack(fill=X)
         back_con.pack_propagate(False)
         self.create_back_button(back_con).place(x=10, y=12)
 
-        # Map Container
+        # Map display
         self.map_frame = Frame(self, width=390, height=405, bg="#8f8f8f")
-        self.map_frame.pack(pady=0)
+        self.map_frame.pack()
         self.map_frame.pack_propagate(False)
 
-        # Map Image
         self.map_img_label = Label(self.map_frame, bg="#8f8f8f")
         self.map_img_label.pack(expand=True)
 
-        # Option Container
+        # Ride options and info
         self.options_frame = Frame(self, width=390, height=350, bg="white")
-        self.options_frame.pack(pady=0)
+        self.options_frame.pack()
         self.options_frame.pack_propagate(False)
 
-        # Ride Info Container
+        # Ride information section
         info_frame = Frame(self.options_frame, bg="#eeeeee", width=390, height=100)
         info_frame.pack()
         info_frame.pack_propagate(False)
 
-        # Booking ID row
+        # Booking ID display
         booking_row = Frame(info_frame, bg="#eeeeee")
         booking_row.pack(fill=X, padx=25, pady=(10, 0))
-
         Label(booking_row, text="Booking ID", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee").pack(side=LEFT)
         self.booking_id_label = Label(booking_row, text=".....", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee")
         self.booking_id_label.pack(side=RIGHT)
 
-        # Duration row
+        # Estimated ride duration display
         duration_row = Frame(info_frame, bg="#eeeeee")
         duration_row.pack(fill=X, padx=25, pady=(5, 0))
-
         Label(duration_row, text="Estimated Ride Duration", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee").pack(side=LEFT)
         self.duration_label = Label(duration_row, text=".....", font=self.booking_info_font, fg="#8f8f8f", bg="#eeeeee")
         self.duration_label.pack(side=RIGHT)
 
         Label(info_frame, text="Looking for a Ride...", font=self.loading_font, fg="#8f8f8f", bg="#eeeeee").place(anchor="center", x=195, y=80)
 
-        # Driver Info Frame
+        # Driver profile placeholder and labels
         driver_info_frame = Frame(self.options_frame, bg="white", width=390, height=60)
         driver_info_frame.pack(pady=(5, 10))
         driver_info_frame.pack_propagate(False)
 
-        # Circle (profile placeholder)
         profile_canvas = Canvas(driver_info_frame, width=40, height=40, bg="white", highlightthickness=0)
         profile_canvas.create_oval(2, 2, 38, 38, fill="#d9d9d9", outline="#d9d9d9")
         profile_canvas.place(x=25, y=10)
@@ -97,16 +92,14 @@ class LookingPage(Frame):
 
         vehicle_label_frame = Frame(driver_info_frame, bg="white")
         vehicle_label_frame.pack(side="right", padx=(0, 20), pady=10, anchor="e")
+        Label(vehicle_label_frame, text="--", font=self.selection_font, fg="#8f8f8f", bg="white").pack(anchor="e")
+        Label(vehicle_label_frame, text="--", font=self.selection_font, fg="#8f8f8f", bg="white").pack(anchor="e")
 
-        Label(vehicle_label_frame, text="--", font=self.selection_font, fg="#8f8f8f", bg="white", anchor="e", justify="right").pack(anchor="e")
-        Label(vehicle_label_frame, text="--", font=self.selection_font, fg="#8f8f8f", bg="white", anchor="e", justify="right").pack(anchor="e")
-
-        # Location Display
+        # Display pickup and dropoff location info
         location_frame = Frame(self.options_frame, bg="white", width=390, height=95)
         location_frame.pack()
         location_frame.pack_propagate(False)
 
-        # Base path for image files
         base_path = os.path.dirname(__file__)
         pickup_path = os.path.join(base_path, "..", "media", "pickup.png")
         dropoff_path = os.path.join(base_path, "..", "media", "dropoff.png")
@@ -120,7 +113,6 @@ class LookingPage(Frame):
         self.dropoff_img = ImageTk.PhotoImage(dropoff_image)
         self.line_img = ImageTk.PhotoImage(line_image)
 
-        # Row and Column for proper image and text alignment
         info_row = Frame(location_frame, bg="white")
         info_row.pack(anchor="w", padx=30)
         icon_column = Frame(info_row, bg="white")
@@ -134,14 +126,14 @@ class LookingPage(Frame):
         Label(label_column, text=self.pickup_location, font=self.location_font, fg="#8f8f8f", bg="white", anchor="w").pack(anchor="w")
         Label(label_column, text=self.dropoff_location, font=self.location_font, fg="#8f8f8f", bg="white", anchor="w").pack(anchor="w", pady=(22, 0))
 
-        # Distance Info Container
+        # Show estimated distance
         distance_container = Frame(location_frame, bg="white", width=350, height=20)
         distance_container.pack(pady=(5, 0))
         Label(distance_container, text="Distance", font=self.distance_font, fg="#8f8f8f", bg="white").place(x=5)
         self.distance_value = Label(distance_container, text="--", font=self.distance_font, fg="#8f8f8f", bg="white")
         self.distance_value.place(x=330)
 
-        # Vehicle Info
+        # Show selected vehicle and price
         vehicle_frame = Frame(self.options_frame, bg="white", width=390, height=60)
         vehicle_frame.pack()
         vehicle_frame.pack_propagate(False)
@@ -169,16 +161,16 @@ class LookingPage(Frame):
         Label(vehicle_frame, text=self.selected_vehicle, font=self.selection_font, fg="#8f8f8f", bg="white").place(x=85, y=20)
         Label(vehicle_frame, text=self.selected_price, font=self.selection_font, fg="#8f8f8f", bg="white").place(x=300, y=20)
 
-        # Cancel Button
+        # Cancel button at the bottom
         cancel_con = Frame(self, bg="#ff8fab", width=390, height=50)
         cancel_con.place(y=794)
         cancel_con.pack_propagate(False)
         self.create_cancel_button(cancel_con).place(x=300, y=12)
 
-        # Only load the static map (no booking or duration now)
+        # Load the static map image after a short delay
         self.after(100, self.load_static_map)
-        
-        # Transition to RideArrivalPage after 10s
+
+        # Automatically go to RideArrivalPage after 10 seconds
         self.after_id = self.after(10000, self.open_ride_arrival_page)
 
     def create_back_button(self, container):
@@ -201,17 +193,13 @@ class LookingPage(Frame):
 
     def on_back_clicked(self, event):
         if hasattr(self.parent, "ride_status_page"):
-            ride_status = self.parent.ride_status_page
-
-            if not ride_status.ride_active:
-                ride_status.set_ride_details(
-                    self.pickup_location,
-                    self.dropoff_location,
-                    self.selected_vehicle,
-                    self.selected_price,
-                    self.duration_label.cget("text")
-                )
-
+            self.parent.ride_status_page.restore_ride_info(
+                self.pickup_location,
+                self.dropoff_location,
+                self.selected_vehicle,
+                self.selected_price,
+                self.duration_label.cget("text")
+            )
         if hasattr(self.parent, "show_home_page"):
             self.parent.show_home_page()
 
@@ -225,13 +213,11 @@ class LookingPage(Frame):
                 self.selected_vehicle,
                 self.selected_price
             )
-
-            # Force ride status tab to show CANCELED view
             self.parent.ride_status_page.show_canceled()
 
         if hasattr(self.parent, "show_home_page"):
             self.parent.show_home_page()
-        
+
     def load_static_map(self):
         map_url = self.backend.generate_static_map_url(self.pickup_location, self.dropoff_location, use_polyline=True)
         if map_url:
@@ -255,8 +241,7 @@ class LookingPage(Frame):
 
     def open_ride_arrival_page(self):
         if not self.winfo_exists():
-            return  # Page was destroyed/canceled before timeout
-        
+            return
         if hasattr(self.parent, "show_ride_arrival_page"):
             self.parent.show_ride_arrival_page(
                 self.pickup_location,
