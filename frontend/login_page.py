@@ -9,10 +9,13 @@ from tkinter import *
 from tkinter.font import Font
 from tkinter import ttk
 
+from backend.login import LoginHandler
+
 class LoginPage(Frame):
     def __init__(self, parent):
         super().__init__(parent, bg="#ffc4d6")
         self.parent = parent
+        self.login_handler = LoginHandler() # Access backend logic for user accounts
 
         self.title_font = Font(family="Poppins", size=20, weight="bold")
         self.welcome_font = Font(family="League spartan", size=10, weight="bold")
@@ -41,7 +44,7 @@ class LoginPage(Frame):
         country_border = Frame(phone_frame, bg="#BDBDBD")
         country_border.pack(side=LEFT, padx=(0, 1))
 
-        # Set a fixed width in pixels (e.g., 80)
+        # Set a fixed width in pixels
         country_frame = Frame(country_border, bg="white", width=40, height=26)
         country_frame.pack(padx=1, pady=1)
         country_frame.pack_propagate(False)  # Prevent resizing to fit contents
@@ -66,6 +69,7 @@ class LoginPage(Frame):
         self.phone_entry.pack(fill=X, ipady=5)
         self.phone_entry.bind("<FocusIn>", lambda e: self.clear_placeholder(self.phone_entry, "Mobile Phone"))
         self.phone_entry.bind("<FocusOut>", lambda e: self.restore_placeholder(self.phone_entry, "Mobile Phone"))
+        self.phone_entry.placeholder_text = "Mobile Phone"
 
         # PIN Entry
         pin_border = Frame(white_box, bg="#BDBDBD")
@@ -78,6 +82,7 @@ class LoginPage(Frame):
         self.pin_entry.pack(fill=X, ipady=5)
         self.pin_entry.bind("<FocusIn>", lambda e: self.clear_placeholder(self.pin_entry, "PIN (4 digits only)"))
         self.pin_entry.bind("<FocusOut>", lambda e: self.restore_placeholder(self.pin_entry, "PIN (4 digits only)"))
+        self.pin_entry.placeholder_text = "PIN (4 digits only)"
 
         # Login button
         Button(white_box, text="LOGIN", font=self.button_font, bg="#f38c9f", fg="white",
@@ -95,14 +100,73 @@ class LoginPage(Frame):
         self.signup_button.place(relx=0.5, y=620, anchor="n")
 
     def clear_placeholder(self, entry_widget, placeholder_text):
-        if entry_widget.get() == placeholder_text:
+        if entry_widget.get() == placeholder_text or getattr(entry_widget, "is_error", False):
             entry_widget.delete(0, END)
             entry_widget.config(fg="black")
+            entry_widget.is_error = False
 
     def restore_placeholder(self, entry_widget, placeholder_text):
         if not entry_widget.get():
             entry_widget.insert(0, placeholder_text)
             entry_widget.config(fg="gray")
+
+    def set_error_style(self, entry_widget, message):
+        '''
+        Apply red border and error text inside the entry widget.
+        Used when login fails or phone/PIN is invalid.
+        '''
+        entry_widget.config(highlightthickness=1, highlightbackground="red", highlightcolor="red")
+        entry_widget.delete(0, END)
+        entry_widget.insert(0, message)
+        entry_widget.config(fg="red", show="")
+        entry_widget.is_error = True
+
+    def clear_error_styles(self):
+        '''
+        Reset all styles of login fields (e.g., after retrying login).
+        Clears red borders and restores placeholder text if needed.
+        '''
+        for entry in [self.phone_entry, self.pin_entry]:
+            entry.config(highlightthickness=0)
+            if getattr(entry, "is_error", False):
+                entry.delete(0, END)
+                self.restore_placeholder(entry, entry.placeholder_text)
+                entry.is_error = False
+
+    def on_login_clicked(self):
+        '''
+        Runs when the LOGIN button is clicked.
+        Collects input, sends to backend,
+        shows error message if login fails,
+        or navigates to home if successful.
+        '''
+        self.clear_error_styles()  # Reset previous warning messages
+
+        phone_number = self.phone_entry.get().strip()
+        pin = self.pin_entry.get().strip()
+
+        if phone_number == "Mobile Phone":
+            phone_number = ""
+        if pin == "PIN (4 digits only)":
+            pin = ""
+
+        result = self.login_handler.authenticate_user(phone_number, pin)
+
+        if result["success"]:
+            if hasattr(self.parent, "show_home_page"):
+                self.parent.show_home_page()
+        else:
+            message = result["message"]
+            if "User not found" in message:
+                self.set_error_style(self.phone_entry, "You don't have an account.")
+                self.set_error_style(self.pin_entry, "You don't have an account.")
+            elif "Incorrect PIN" in message:
+                self.set_error_style(self.phone_entry, "Invalid Number or PIN")
+                self.set_error_style(self.pin_entry, "Invalid Number or PIN")
+            elif "Invalid phone number" in message:
+                self.set_error_style(self.phone_entry, "Phone number must be 10 digits.")
+            elif "PIN must be exactly 4 digits" in message:
+                self.set_error_style(self.pin_entry, "PIN must be 4 digits.")
 
     def create_signup_button(self):
         canvas = Canvas(
@@ -117,10 +181,6 @@ class LoginPage(Frame):
         canvas.create_text(78, 13, text="SIGN UP", fill="#f38c9f", font=("League Spartan", 10, "bold"))
         canvas.bind("<Button-1>", lambda e: self.on_signup_clicked())
         return canvas
-
-    def on_login_clicked(self):  # When login button is clicked, navigate to the home page
-        if hasattr(self.parent, "show_home_page"):
-            self.parent.show_home_page()
 
     def on_signup_clicked(self):  # When Signup button is clicked, navigate to the signup page
         if hasattr(self.parent, "show_signup_page"):
