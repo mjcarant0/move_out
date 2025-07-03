@@ -127,7 +127,7 @@ class MainWindow(Tk):
         self.ride_arrival_page = BookedPage(self, pickup, dropoff, vehicle, price, booking_id, estimated_duration, license_plate, driver_name, vehicle_name)
         self.ride_arrival_page.pack(fill="both", expand=True)
 
-    def show_helpcenter_page(self):
+    def show_help_center_page(self):
         # Hide current page
         self.clear_current_page()
 
