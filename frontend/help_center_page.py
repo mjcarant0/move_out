@@ -71,10 +71,6 @@ class HelpCenterPage(Frame):
     def __init__(self, parent):
         super().__init__(parent, bg="#ffc4d6")
 
-        parent.geometry("390x844")
-        parent.resizable(False, False)
-        parent.title("Help Center - FAQ")
-
         self.title_font = Font(family="Poppins", size=30, weight="bold")
         self.subheading_font = Font(family="League Spartan", size=15, weight="bold")
         self.question_font = Font(family="Montserrat", size=12, weight="bold")
@@ -90,7 +86,7 @@ class HelpCenterPage(Frame):
         # Back button at top-left
         icon_label = Label(self, image=self.back_icon, bg="#ffc4d6", cursor="hand2")
         icon_label.place(x=15, y=45)
-        icon_label.bind("<Button-1>", lambda e: print("Back clicked"))  # Replace with actual navigation later
+        icon_label.bind("<Button-1>", lambda e: self.parent.show_home_page())  # Replace with actual navigation later
 
         # Title centered
         title_label = Label(
@@ -157,9 +153,3 @@ class HelpCenterPage(Frame):
         for q, a in faqs:
             item = FAQItem(self.faq_frame, q, a, self.question_font, self.answer_font)
             item.pack(fill="x", padx=20, pady=2)
-
-
-if __name__ == "__main__":
-    root = Tk()
-    HelpCenterPage(root)
-    root.mainloop()
