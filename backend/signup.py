@@ -27,7 +27,6 @@ class SignupHandler:
         Args:
             first_name: User's first name
             last_name: User's last name
-            country_code: Country code (e.g., '+63', '+65')
             phone_number: Phone number
             pin: 4-digit PIN
             confirm pin: must match PIN
@@ -42,9 +41,6 @@ class SignupHandler:
             
             if not self.validator.validate_name(last_name):
                 return {"success": False, "message": "Invalid last name. Only letters and spaces allowed."}
-            
-            if not self.validator.validate_country_code(country_code):
-                return {"success": False, "message": "Please select a valid country code."}
             
             if not self.validator.validate_phone_number(phone_number):
                 return {"success": False, "message": "Invalid phone number format."}
@@ -62,11 +58,10 @@ class SignupHandler:
             # Clean and format inputs
             first_name = self.validator.format_name(first_name)
             last_name = self.validator.format_name(last_name)
-            country_code = self.validator.format_country_code(country_code)
             phone_number = self.validator.clean_phone_number(phone_number)
             
             # Combine country code and phone number for storage
-            full_phone_number = country_code + phone_number
+            full_phone_number = "+63" + phone_number
             
             # Check if a user with the same number already exists
             existing_user = self.db_manager.execute_query(
